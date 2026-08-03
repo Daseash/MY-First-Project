@@ -1,38 +1,48 @@
-# MY-First-project 
 # 🌍 Wanderlust
 
-> A full-stack web application inspired by Airbnb, allowing users to discover, list, and book unique accommodations around the world.
-using antigravitiy ai models
+> A full-stack vacation rental web application inspired by Airbnb, enhanced with **RAG (Retrieval-Augmented Generation)** and **Antigravity AI models** to deliver intelligent, context-aware property discovery and assistance.
 
 ---
 
 ## 🚀 About the Project
-**Wanderlust** is a vacation rental and booking platform designed to connect property owners with travelers. This project mimics the core functionalities of Airbnb, providing a seamless user interface for browsing listings, viewing property details on an interactive map, leaving reviews, and managing user accounts. 
 
-It was built to demonstrate full-stack development skills, including RESTful API design, database management, user authentication, and secure image hosting.
+**Wanderlust** is a modern vacation rental and booking platform connecting property owners with travelers. Designed as an AI-powered Airbnb clone, it combines standard full-stack CRUD capabilities with advanced **Retrieval-Augmented Generation (RAG)**. Users can seamlessly browse properties, query an intelligent AI assistant for hyper-relevant recommendations, view locations on interactive maps, leave reviews, and manage listings securely.
 
 ---
 
-## ✨ Features
-* **User Authentication:** Secure signup and login functionality with password hashing and session management.
-* **Property Listings:** Users can create, read, update, and delete (CRUD) their own property listings.
-* **Interactive Maps:** Integration with map services (e.g., Mapbox) to display exact property locations through geocoding.
-* **Image Uploads:** Secure cloud storage integration (e.g., Cloudinary) for uploading and managing property images.
-* **Reviews and Ratings:** Authenticated users can leave reviews and rate properties they have visited.
-* **Responsive Design:** A mobile-friendly user interface ensuring a great experience across all devices.
+## ✨ Key Features
+
+* **🤖 AI & RAG Integration:** Utilizes Retrieval-Augmented Generation powered by **Antigravity AI models** to answer guest inquiries, recommend personalized stays based on full-text listing data, and parse local attraction details.
+* **🔐 User Authentication:** Secure signup, login, password hashing, and session management using Passport.js / JWT.
+* **🏠 Property Management (CRUD):** Complete CRUD workflow allowing hosts to list, update, view, and remove property listings.
+* **📍 Interactive Maps:** Integrated mapping services (e.g., Mapbox) with geocoding to display property locations precisely.
+* **🖼️ Cloud Image Uploads:** Direct multi-image uploading and management backed by cloud storage (e.g., Cloudinary).
+* **⭐ Reviews & Ratings:** Verified user feedback, rating metrics, and review management system for host listings.
+* **📱 Responsive UI:** Fully responsive and clean user interface for seamless experience on mobile, tablet, and desktop.
 
 ---
 
 ## 💻 Tech Stack
-* **Frontend:** HTML5, CSS3, JavaScript, Bootstrap (or Tailwind/React)
+
+* **Frontend:** HTML5, CSS3, JavaScript (ES6+), Bootstrap / Tailwind CSS
 * **Backend:** Node.js, Express.js
-* **Database:** MongoDB, Mongoose
-* **Authentication:** 
-* **Cloud Storage:** 
-* **Mapping:**  API
+* **Database & Vector Storage:** MongoDB, Mongoose, Vector Database / Embeddings (for RAG context retrieval)
+* **AI & RAG Architecture:** Antigravity AI Models, LangChain / LlamaIndex (or custom RAG pipeline)
+* **Authentication:** Passport.js / Session Management
+* **Cloud Storage & APIs:** Cloudinary (Images), Mapbox API (Geocoding & Maps)
 
 ---
 
+## 📦 Getting Started
 
+### Prerequisites
+* Node.js (v18+ recommended)
+* MongoDB database instance
+* API keys for Antigravity AI, Mapbox, and Cloudinary
 
+### Installation
 
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/Daseash/MY-First-CRUD-PRoject.git](https://github.com/Daseash/MY-First-CRUD-PRoject.git)
+   cd MY-First-CRUD-PRoject
