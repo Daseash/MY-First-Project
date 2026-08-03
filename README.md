@@ -1,4 +1,4 @@
-# MY-First-CRUD-PRoject
+# MY-First-project 
 # 🌍 Wanderlust
 
 > A full-stack web application inspired by Airbnb, allowing users to discover, list, and book unique accommodations around the world.
