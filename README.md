@@ -1,44 +1,59 @@
 # 🌍 Wanderlust
 
-> A full-stack vacation rental web application inspired by Airbnb, enhanced with **RAG (Retrieval-Augmented Generation)** and **Antigravity AI models** to deliver intelligent, context-aware property discovery and assistance.
+> **Next-Generation Vacation Rentals** — An AI-enhanced, full-stack Airbnb clone leveraging **Retrieval-Augmented Generation (RAG)** and **Antigravity AI** for intelligent, context-aware property discovery.
 
 ---
 
-## 🚀 About the Project
+## 🌟 Overview
 
-**Wanderlust** is a modern vacation rental and booking platform connecting property owners with travelers. Designed as an AI-powered Airbnb clone, it combines standard full-stack CRUD capabilities with advanced **Retrieval-Augmented Generation (RAG)**. Users can seamlessly browse properties, query an intelligent AI assistant for hyper-relevant recommendations, view locations on interactive maps, leave reviews, and manage listings securely.
+**Wanderlust** bridges the gap between traditional vacation rental platforms and modern AI capabilities. Designed for both hosts and travelers, it provides classic CRUD functionality alongside an intelligent AI assistant capable of personalized recommendations, semantic search, and interactive location discovery.
 
 ---
 
 ## ✨ Key Features
 
-* **🤖 AI & RAG Integration:** Utilizes Retrieval-Augmented Generation powered by **Antigravity AI models** to answer guest inquiries, recommend personalized stays based on full-text listing data, and parse local attraction details.
-* **🔐 User Authentication:** Secure signup, login, password hashing, and session management using Passport.js / JWT.
-* **🏠 Property Management (CRUD):** Complete CRUD workflow allowing hosts to list, update, view, and remove property listings.
-* **📍 Interactive Maps:** Integrated mapping services (e.g., Mapbox) with geocoding to display property locations precisely.
-* **🖼️ Cloud Image Uploads:** Direct multi-image uploading and management backed by cloud storage (e.g., Cloudinary).
-* **⭐ Reviews & Ratings:** Verified user feedback, rating metrics, and review management system for host listings.
-* **📱 Responsive UI:** Fully responsive and clean user interface for seamless experience on mobile, tablet, and desktop.
+- **🤖 AI & RAG Discovery Engine**  
+  Powered by **Antigravity AI models**, enabling hyper-personalized stay recommendations, smart query parsing, and natural language Q&A against listing metadata.
+
+- **🔐 Robust Authentication**  
+  Secure signup, login, session management, and password hashing with **Passport.js / JWT**.
+
+- **🏠 Full CRUD Property Management**  
+  Intuitive host workflow to list, edit, preview, and manage property details effortlessly.
+
+- **📍 Interactive Mapping**  
+  Precise geocoding and property location mapping integrated via **Mapbox API**.
+
+- **🖼️ Cloud Media Management**  
+  Seamless multi-image upload and cloud storage integration powered by **Cloudinary**.
+
+- **⭐ Rating & Review System**  
+  Verified user feedback, rating aggregations, and host management tools.
+
+- **📱 Fully Responsive UI**  
+  Modern, clean layout optimized across mobile, tablet, and desktop viewports.
 
 ---
 
-## 💻 Tech Stack
+## 🛠️ Tech Stack
 
-* **Frontend:** HTML5, CSS3, JavaScript (ES6+), Bootstrap / Tailwind CSS
-* **Backend:** Node.js, Express.js
-* **Database & Vector Storage:** MongoDB, Mongoose, Vector Database / Embeddings (for RAG context retrieval)
-* **AI & RAG Architecture:** Antigravity AI Models, LangChain / LlamaIndex (or custom RAG pipeline)
-* **Authentication:** Passport.js / Session Management
-* **Cloud Storage & APIs:** Cloudinary (Images), Mapbox API (Geocoding & Maps)
+| Domain | Technology |
+| :--- | :--- |
+| **Frontend** | HTML5, CSS3, JavaScript (ES6+), Bootstrap / Tailwind CSS |
+| **Backend** | Node.js, Express.js |
+| **Database & Search** | MongoDB, Mongoose, Vector Database / Embeddings |
+| **AI Architecture** | Antigravity AI Models, LangChain / LlamaIndex (RAG Pipeline) |
+| **Authentication** | Passport.js, Express Session / JWT |
+| **Cloud & APIs** | Cloudinary API, Mapbox GL JS |
 
 ---
 
-## 📦 Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
-* Node.js (v18+ recommended)
-* MongoDB database instance
-* API keys for Antigravity AI, Mapbox, and Cloudinary
+- [Node.js](https://nodejs.org/) (v18+ recommended)
+- [MongoDB](https://www.mongodb.com/) instance
+- API keys for **Antigravity AI**, **Mapbox**, and **Cloudinary**
 
 ### Installation
 
