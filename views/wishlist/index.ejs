@@ -1,0 +1,47 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="container-xl">
+  <div class="section-row">
+    <div>
+      <h1 class="page-title">Your wishlist</h1>
+      <p class="page-subtitle">Stays you've saved for later.</p>
+    </div>
+  </div>
+
+  <% if (!savedListings || savedListings.length === 0) { %>
+  <div class="empty-state">
+    <i class="fa-regular fa-heart"></i>
+    <h3>Nothing saved yet</h3>
+    <p>Tap the heart on any stay to keep it here for later.</p>
+    <a href="/listings" class="btn btn-accent btn-lg">
+      <i class="fa-solid fa-compass me-1"></i> Discover stays
+    </a>
+  </div>
+  <% } else { %>
+  <div class="listing-grid">
+    <% savedListings.forEach((listing) => { %>
+    <a href="/listings/<%= listing._id %>" class="listing-card">
+      <div class="card-media">
+        <img
+          src="<%= listing.image && listing.image.url ? listing.image.url : 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=60' %>"
+          alt="<%= listing.title %>"
+          loading="lazy"
+        />
+        <span class="wishlist-btn active"><i class="fa-solid fa-heart"></i></span>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <h3 class="card-title"><%= listing.title %></h3>
+          <span class="card-rating"><i class="fa-solid fa-star"></i> 4.9</span>
+        </div>
+        <p class="card-subtitle"><%= listing.location %>, <%= listing.country %></p>
+        <p class="card-price">
+          &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : '0' %>
+          <span>/ night</span>
+        </p>
+      </div>
+    </a>
+    <% }) %>
+  </div>
+  <% } %>
+</div>

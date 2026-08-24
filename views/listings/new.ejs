@@ -1,0 +1,114 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="form-page">
+  <div class="form-card">
+    <h2>Add a new stay</h2>
+    <p class="form-subtitle">
+      Share your space with travelers from around the world.
+    </p>
+
+    <form method="post" action="/listings" enctype="multipart/form-data" novalidate class="needs-validation">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input
+          type="text"
+          id="title"
+          name="listing[title]"
+          class="form-control"
+          placeholder="Cozy cottage with mountain views"
+          required
+        />
+        <div class="valid-feedback">Title looks good!</div>
+        <div class="invalid-feedback">Please enter a title.</div>
+      </div>
+
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea
+          id="description"
+          name="listing[description]"
+          class="form-control"
+          rows="4"
+          placeholder="Describe what makes your place special..."
+          required
+        ></textarea>
+        <div class="invalid-feedback">Please enter a short description.</div>
+      </div>
+
+      <div class="mb-3">
+        <label for="image" class="form-label">Upload Listing Image</label>
+        <input
+          type="file"
+          id="image"
+          name="listing[image]"
+          class="form-control"
+          accept="image/*"
+        />
+        <div class="form-text text-muted">Upload a photo of your stay (.jpg, .png, .webp).</div>
+      </div>
+
+      <div class="form-row mb-3">
+        <div>
+          <label for="price" class="form-label">Price (per night)</label>
+          <input
+            type="number"
+            id="price"
+            name="listing[price]"
+            class="form-control"
+            placeholder="2500"
+            required
+          />
+          <div class="invalid-feedback">Please enter a valid price.</div>
+        </div>
+        <div>
+          <label for="country" class="form-label">Country</label>
+          <input
+            type="text"
+            id="country"
+            name="listing[country]"
+            class="form-control"
+            placeholder="India"
+            required
+          />
+          <div class="invalid-feedback">Please enter the country name.</div>
+        </div>
+      </div>
+
+      <div class="form-row mb-3">
+        <div>
+          <label for="location" class="form-label">Location</label>
+          <input
+            type="text"
+            id="location"
+            name="listing[location]"
+            class="form-control"
+            placeholder="Goa Beach, India"
+            required
+          />
+          <div class="invalid-feedback">Please enter the location.</div>
+        </div>
+        <div>
+          <label for="category" class="form-label">Category</label>
+          <select id="category" name="listing[category]" class="form-select">
+            <option value="beach" selected>🏖️ Beach / Beachfront</option>
+            <option value="amazing-views">🌄 Amazing Views</option>
+            <option value="luxury">💎 Luxury / Iconic</option>
+            <option value="mansion">🏰 Mansions</option>
+            <option value="cabin">🪵 Cabins</option>
+            <option value="countryside">🌾 Countryside</option>
+            <option value="lake">🌊 Lakefront</option>
+            <option value="farm">🚜 Farms</option>
+            <option value="pool">🏊 Amazing Pools</option>
+            <option value="island">🏝️ Islands</option>
+            <option value="trending">🔥 Trending</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn btn-accent btn-lg btn-block" type="submit">
+        <i class="fa-solid fa-plus me-1"></i> Add New Stay
+      </button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,121 @@
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a class="nav-logo nav-logo--3d" href="/" title="Airbnb">
+      <div class="logo-3d-wrap">
+        <i class="fa-brands fa-airbnb airbnb-3d-icon"></i>
+      </div>
+      <span class="nav-logo-name">airbnb</span>
+    </a>
+
+    <div class="nav-center-links hide-mobile">
+      <a href="/" class="nav-center-link nav-center-link--active nav-center-link--airbnb" title="Stays">
+        <div class="airbnb-3d-icon-wrap">
+          <svg class="airbnb-tab-3d-svg airbnb-3d-stays-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g class="svg-3d-house">
+              <ellipse cx="24" cy="43" rx="15" ry="3.5" fill="rgba(0,0,0,0.12)" />
+              <path d="M12 21L24 13V38L12 33V21Z" fill="#FDE2E4" />
+              <path d="M24 13L36 21V33L24 38V13Z" fill="#FFF0F2" />
+              <path d="M16 11V16L19 14V9L16 11Z" fill="#E0245E" />
+              <path d="M9 21L24 10L24 13L11 23L9 21Z" fill="#E0245E" />
+              <path d="M24 10L39 21L37 23L24 13V10Z" fill="#FF385C" />
+              <path d="M27 26C27 24.3431 28.3431 23 30 23C31.6569 23 33 24.3431 33 26V34.5L27 36.5V26Z" fill="#FF385C" />
+              <circle cx="28.5" cy="30" r="0.8" fill="#FFF" />
+              <path d="M15 23L20 21V28L15 30V23Z" fill="#FFDF00" />
+              <path d="M17.5 22V29M15 26.5L20 24.5" stroke="#E08A00" stroke-width="0.8" stroke-linecap="round" />
+            </g>
+          </svg>
+        </div>
+        <span class="nav-center-label">Stays</span>
+      </a>
+
+      <a href="/listings" class="nav-center-link nav-center-link--airbnb" title="Experiences">
+        <div class="airbnb-3d-icon-wrap">
+          <svg class="airbnb-tab-3d-svg airbnb-3d-exp-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g class="svg-3d-balloon">
+              <ellipse cx="24" cy="44" rx="14" ry="3" fill="rgba(0,0,0,0.1)" />
+              <path d="M24 6C15 6 12 16 16 26C18 30 21 34 22 35H26C27 34 30 30 32 26C36 16 33 6 24 6Z" fill="#00D2FF" />
+              <path d="M24 6C20 6 18 16 20 26C21 29 22.5 33 23 35H25C25.5 33 27 29 28 26C30 16 28 6 24 6Z" fill="#FF385C" />
+              <path d="M24 6C22.5 6 21 16 22 26C22.5 29 23.5 33 24 35H24C24.5 33 25.5 29 26 26C27 16 25.5 6 24 6Z" fill="#FFB400" />
+              <line x1="21.5" y1="35" x2="22" y2="39" stroke="#5E5E5E" stroke-width="0.8" />
+              <line x1="26.5" y1="35" x2="26" y2="39" stroke="#5E5E5E" stroke-width="0.8" />
+              <rect x="21" y="39" width="6" height="4.5" rx="1" fill="#BA7A44" stroke="#8D5524" stroke-width="0.7" />
+              <ellipse cx="14" cy="40" rx="6" ry="3" fill="#FFFFFF" opacity="0.9" />
+              <ellipse cx="34" cy="38" rx="7" ry="3.5" fill="#FFFFFF" opacity="0.9" />
+              <circle cx="16" cy="38" r="3.5" fill="#FFFFFF" opacity="0.9" />
+              <circle cx="32" cy="36" r="4" fill="#FFFFFF" opacity="0.9" />
+            </g>
+          </svg>
+        </div>
+        <span class="nav-center-label">Experiences</span>
+      </a>
+    </div>
+
+    <div class="nav-actions">
+      <button
+        class="theme-toggle-btn"
+        id="theme-toggle-btn"
+        type="button"
+        aria-label="Switch Design Theme"
+        title="Toggle between Lumina Modern and Pixel Escapes themes"
+      >
+        <span class="theme-toggle-badge theme-toggle-badge--lumina">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> <span>Lumina</span>
+        </span>
+        <span class="theme-toggle-badge theme-toggle-badge--pixel">
+          <i class="fa-solid fa-gamepad"></i> <span>Pixel</span>
+        </span>
+      </button>
+
+      <a href="/listings/new" class="nav-host-link">Become a host</a>
+      <button class="nav-icon-btn" type="button" aria-label="Language">
+        <span class="material-symbols-outlined nav-mat-icon">language</span>
+      </button>
+
+      <div class="nav-user-wrap">
+        <button
+          class="nav-menu-btn"
+          id="nav-user-toggle"
+          type="button"
+          aria-label="Account menu"
+          aria-expanded="false"
+        >
+          <span class="material-symbols-outlined nav-mat-icon">menu</span>
+          <span class="nav-avatar"><span class="material-symbols-outlined nav-mat-avatar">account_circle</span></span>
+        </button>
+
+        <div class="nav-user-menu" id="nav-user-menu">
+          <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+          <div class="nav-user-hello">
+            <span class="nav-user-hello-name">Hi, <strong><%= currentUser.username %></strong></span>
+            <span class="nav-user-hello-sub">Ready for your next trip?</span>
+          </div>
+          <a href="/bookings"><i class="fa-solid fa-suitcase me-2"></i> My Trips</a>
+          <a href="/wishlist"><i class="fa-regular fa-heart me-2"></i> Wishlist</a>
+          <hr />
+          <a href="/logout"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i> Log out</a>
+          <% } else { %>
+          <a href="/login"><i class="fa-solid fa-right-to-bracket me-2"></i> Log in</a>
+          <a href="/signup"><i class="fa-solid fa-user-plus me-2"></i> Sign up</a>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-mobile-menu hide-desktop" id="nav-mobile-menu">
+    <button class="mobile-theme-toggle" type="button" aria-label="Switch theme">
+      <i class="fa-solid fa-palette me-2"></i> Theme: <span class="mobile-theme-label fw-bold ms-1">Lumina</span>
+    </button>
+    <a href="/">Explore</a>
+    <a href="/listings">Browse Stays</a>
+    <a href="/listings/new">List Your Place</a>
+    <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+    <a href="/bookings">My Trips</a>
+    <a href="/wishlist">Wishlist</a>
+    <a href="/logout">Log out</a>
+    <% } else { %>
+    <a href="/login">Log in</a>
+    <a href="/signup">Sign up</a>
+    <% } %>
+  </div>
+</nav>

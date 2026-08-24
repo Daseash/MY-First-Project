@@ -1,0 +1,264 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="form-page py-5">
+  <div class="form-card mx-auto shadow-lg rounded-4 p-4 p-md-5" style="max-width: 490px; background: #fff;">
+    <h2 class="text-center fw-bold mb-1">Welcome to WanderLust</h2>
+    <p class="form-subtitle text-center text-muted mb-4 fs-6">
+      Sign in or create an account to list your place and manage stays.
+    </p>
+
+    <!-- Nav tabs for OTP vs Password -->
+    <ul class="nav nav-pills nav-justified mb-4 p-1 bg-light rounded-pill" id="loginTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active rounded-pill fw-semibold py-2 border-0" id="otp-tab" data-bs-toggle="tab" data-bs-target="#otp-pane" type="button" role="tab">
+          <i class="fa-solid fa-mobile-screen-button me-1"></i> OTP Sign In
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link rounded-pill fw-semibold py-2 border-0" id="password-tab" data-bs-toggle="tab" data-bs-target="#password-pane" type="button" role="tab">
+          <i class="fa-solid fa-key me-1"></i> Password
+        </button>
+      </li>
+    </ul>
+
+    <div class="tab-content" id="loginTabContent">
+      <!-- OTP Tab Pane -->
+      <div class="tab-pane fade show active" id="otp-pane" role="tabpanel" tabindex="0">
+        <div id="otp-alert-box"></div>
+
+        <!-- Step 1: Request OTP -->
+        <div id="otp-step-1">
+          <div class="mb-3">
+            <label for="otp-email" class="form-label fw-semibold">Email address</label>
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0"><i class="fa-regular fa-envelope text-muted"></i></span>
+              <input type="email" id="otp-email" class="form-control form-control-lg fs-6 border-start-0 ps-0" placeholder="name@example.com" required />
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="otp-phone" class="form-label fw-semibold">Phone number</label>
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-phone text-muted"></i></span>
+              <input type="tel" id="otp-phone" class="form-control form-control-lg fs-6 border-start-0 ps-0" placeholder="+91 9876543210" required />
+            </div>
+            <div class="form-text text-muted small mt-1">We'll send a 6-digit verification code to your email and phone.</div>
+          </div>
+
+          <button type="button" id="btn-send-otp" class="btn btn-accent btn-lg btn-block w-100 py-3 mt-2 fw-semibold">
+            <i class="fa-solid fa-paper-plane me-1"></i> Generate & Send OTP
+          </button>
+        </div>
+
+        <!-- Step 2: Enter & Verify OTP -->
+        <div id="otp-step-2" style="display: none;">
+          <div class="alert alert-success border-0 rounded-4 shadow-sm p-4 mb-4" style="background: rgba(237, 249, 239, 0.9);">
+            <div class="d-flex align-items-start gap-3">
+              <div class="rounded-circle bg-success text-white p-2 d-inline-flex align-items-center justify-content-center" style="width: 36px; height: 36px; flex-shrink: 0;">
+                <i class="fa-solid fa-paper-plane fs-6"></i>
+              </div>
+              <div>
+                <strong class="d-block text-dark fs-6 mb-1">Verification Code Dispatched!</strong>
+                <p class="small text-muted mb-0" id="otp-sent-info">
+                  We've sent a 6-digit code to your Gmail and phone number.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label for="otp-code-input" class="form-label fw-semibold">Enter 6-Digit OTP</label>
+            <input type="text" id="otp-code-input" maxlength="6" class="form-control form-control-lg text-center font-monospace letter-spacing-2 fs-2 py-3 fw-bold" placeholder="• • • • • •" autocomplete="one-time-code" required />
+            <div class="form-text text-muted small mt-2">
+              <i class="fa-solid fa-lock me-1"></i> Check your Gmail inbox (and Spam folder) or SMS.
+            </div>
+          </div>
+
+          <button type="button" id="btn-verify-otp" class="btn btn-accent btn-lg btn-block w-100 py-3 fw-semibold">
+            <i class="fa-solid fa-right-to-bracket me-1"></i> Verify OTP & Sign In
+          </button>
+
+          <div class="d-flex align-items-center justify-content-between mt-3 pt-2 border-top">
+            <button type="button" id="btn-change-credentials" class="btn btn-link btn-sm text-muted text-decoration-none ps-0">
+              <i class="fa-solid fa-arrow-left me-1"></i> Edit Email / Phone
+            </button>
+            <button type="button" id="btn-resend-otp" class="btn btn-link btn-sm text-dark fw-semibold text-decoration-none pe-0">
+              <i class="fa-solid fa-rotate-right me-1"></i> Resend code
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Password Tab Pane -->
+      <div class="tab-pane fade" id="password-pane" role="tabpanel" tabindex="0">
+        <form method="POST" action="/login" novalidate class="needs-validation">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+          <input type="hidden" name="next" value="<%= typeof next !== 'undefined' ? next : '' %>" />
+          <div class="mb-3">
+            <label for="username" class="form-label fw-semibold">Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              class="form-control form-control-lg fs-6"
+              placeholder="johndoe"
+              required
+            />
+            <div class="invalid-feedback">Please enter your username.</div>
+          </div>
+
+          <div class="mb-4">
+            <label for="password" class="form-label fw-semibold">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-control form-control-lg fs-6"
+              placeholder="••••••••"
+              required
+            />
+            <div class="invalid-feedback">Please enter your password.</div>
+          </div>
+
+          <button class="btn btn-accent btn-lg btn-block w-100 py-3 fw-semibold" type="submit">
+            <i class="fa-solid fa-right-to-bracket me-1"></i> Log In
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <p class="form-switch-link mt-4 text-center small text-muted">
+      Don't have an account? <a href="/signup" class="fw-semibold text-dark text-decoration-underline">Sign up</a>
+    </p>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const nextUrl = "<%= typeof next !== 'undefined' ? next : '' %>";
+    const csrfToken = "<%= csrfToken %>";
+
+    const btnSendOtp = document.getElementById("btn-send-otp");
+    const btnVerifyOtp = document.getElementById("btn-verify-otp");
+    const btnResend = document.getElementById("btn-resend-otp");
+    const btnChange = document.getElementById("btn-change-credentials");
+
+    const emailInput = document.getElementById("otp-email");
+    const phoneInput = document.getElementById("otp-phone");
+    const otpInput = document.getElementById("otp-code-input");
+    const alertBox = document.getElementById("otp-alert-box");
+
+    const step1 = document.getElementById("otp-step-1");
+    const step2 = document.getElementById("otp-step-2");
+    const otpSentInfo = document.getElementById("otp-sent-info");
+
+    const showAlert = (msg, type = "danger") => {
+      alertBox.innerHTML = `
+        <div class="alert alert-${type} alert-dismissible fade show rounded-3 small mb-3" role="alert">
+          ${msg}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      `;
+    };
+
+    const sendOtpHandler = async () => {
+      const email = emailInput ? emailInput.value.trim() : "";
+      const phone = phoneInput ? phoneInput.value.trim() : "";
+
+      if (!email) {
+        showAlert("Please enter your email address.", "warning");
+        return;
+      }
+
+      if (!phone) {
+        showAlert("Please enter your phone number.", "warning");
+        return;
+      }
+
+      btnSendOtp.disabled = true;
+      btnSendOtp.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Sending code to Email & Phone...';
+
+      try {
+        const res = await fetch("/send-otp", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "X-CSRF-Token": csrfToken,
+          },
+          body: JSON.stringify({ email, phone, _csrf: csrfToken }),
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          if (otpSentInfo) {
+            otpSentInfo.innerHTML = `Code sent to <strong>${data.email}</strong> and <strong>${data.phone}</strong>.`;
+          }
+          step1.style.display = "none";
+          step2.style.display = "block";
+          alertBox.innerHTML = "";
+          if (otpInput) {
+            otpInput.value = "";
+            otpInput.focus();
+          }
+        } else {
+          showAlert(data.message || "Failed to send OTP.", "danger");
+        }
+      } catch (err) {
+        showAlert("An error occurred while sending OTP.", "danger");
+      } finally {
+        btnSendOtp.disabled = false;
+        btnSendOtp.innerHTML = '<i class="fa-solid fa-paper-plane me-1"></i> Generate & Send OTP';
+      }
+    };
+
+    if (btnSendOtp) btnSendOtp.addEventListener("click", sendOtpHandler);
+    if (btnResend) btnResend.addEventListener("click", sendOtpHandler);
+    if (btnChange) btnChange.addEventListener("click", () => {
+      step2.style.display = "none";
+      step1.style.display = "block";
+      alertBox.innerHTML = "";
+    });
+
+    if (btnVerifyOtp) {
+      btnVerifyOtp.addEventListener("click", async () => {
+        const email = emailInput ? emailInput.value.trim() : "";
+        const phone = phoneInput ? phoneInput.value.trim() : "";
+        const otp = otpInput ? otpInput.value.trim() : "";
+
+        if (!otp || otp.length < 6) {
+          showAlert("Please enter the 6-digit OTP sent to your email or phone.", "warning");
+          return;
+        }
+
+        btnVerifyOtp.disabled = true;
+        btnVerifyOtp.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Verifying...';
+
+        try {
+          const res = await fetch("/verify-otp", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+              "X-CSRF-Token": csrfToken,
+            },
+            body: JSON.stringify({ email, phone, otp, next: nextUrl, _csrf: csrfToken }),
+          });
+          const data = await res.json();
+
+          if (data.success) {
+            window.location.href = data.redirectUrl || "/listings";
+          } else {
+            showAlert(data.message || "Invalid or expired OTP. Please try again.", "danger");
+            btnVerifyOtp.disabled = false;
+            btnVerifyOtp.innerHTML = '<i class="fa-solid fa-right-to-bracket me-1"></i> Verify OTP & Sign In';
+          }
+        } catch (err) {
+          showAlert("An error occurred while verifying OTP.", "danger");
+          btnVerifyOtp.disabled = false;
+          btnVerifyOtp.innerHTML = '<i class="fa-solid fa-right-to-bracket me-1"></i> Verify OTP & Sign In';
+        }
+      });
+    }
+  });
+</script>

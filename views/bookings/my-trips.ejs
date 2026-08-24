@@ -1,0 +1,126 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="container-xl">
+  <% if (typeof justBooked !== 'undefined' && justBooked) { %>
+  <div class="alert-bar alert-bar--success">
+    <i class="fa-solid fa-circle-check me-2"></i> Booking confirmed! Your stay is all set.
+  </div>
+  <% } %>
+  <% if (typeof cancelled !== 'undefined' && cancelled) { %>
+  <div class="alert-bar alert-bar--success">
+    <i class="fa-solid fa-circle-check me-2"></i> Booking cancelled. See you next time!
+  </div>
+  <% } %>
+
+  <div class="section-row">
+    <div>
+      <h1 class="page-title">My Trips</h1>
+      <p class="page-subtitle">Every reservation on your WanderLust journey.</p>
+    </div>
+  </div>
+
+  <h2 class="section-title mt-4">Upcoming trips</h2>
+
+  <% if (typeof upcoming !== 'undefined' && upcoming.length === 0) { %>
+  <div class="empty-state">
+    <i class="fa-solid fa-suitcase-rolling"></i>
+    <h3>No upcoming trips yet</h3>
+    <p>Browse stays and hit Reserve to plan your next getaway.</p>
+    <a href="/listings" class="btn btn-accent btn-lg">
+      <i class="fa-solid fa-compass me-1"></i> Explore stays
+    </a>
+  </div>
+  <% } else { %>
+  <div class="trips-grid">
+    <% upcoming.forEach((trip) => { %>
+    <div class="trip-card">
+      <a href="/listings/<%= trip.listing._id %>" class="trip-media">
+        <img src="<%= ((trip.listing.image && trip.listing.image.url) || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=60') %>" alt="<%= trip.listing.title %>" loading="lazy" />
+      </a>
+      <div class="trip-body">
+        <span class="trip-status trip-status--confirmed">Confirmed</span>
+        <a href="/listings/<%= trip.listing._id %>" class="trip-title"><%= trip.listing.title %></a>
+        <span class="trip-dates">
+          <i class="fa-regular fa-calendar me-1"></i>
+          <%= new Date(trip.checkIn).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) %>
+          &rarr;
+          <%= new Date(trip.checkOut).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
+        </span>
+        <span class="trip-dates"><i class="fa-solid fa-users me-1"></i> <%= trip.guests %> guest(s) &middot; <%= trip.nights %> night(s)</span>
+        <div class="trip-total">
+          <span>Total</span>
+          <span class="trip-total-value">&#8377;<%= trip.total.toLocaleString('en-IN') %></span>
+        </div>
+        <button type="button" class="btn btn-outline-danger btn-sm mt-2 open-cancel-modal-btn" data-trip-id="<%= trip._id %>" data-trip-title="<%= trip.listing.title %>">
+          <i class="fa-solid fa-xmark me-1"></i> Cancel trip
+        </button>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+  <% } %>
+
+  <% if (typeof past !== 'undefined' && past.length > 0) { %>
+  <h2 class="section-title mt-5">Past &amp; cancelled</h2>
+  <div class="trips-grid">
+    <% past.forEach((trip) => { %>
+    <div class="trip-card <%= trip.status === 'cancelled' ? 'trip-card--cancelled' : '' %>">
+      <a href="/listings/<%= trip.listing._id %>" class="trip-media">
+        <img src="<%= ((trip.listing.image && trip.listing.image.url) || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=60') %>" alt="<%= trip.listing.title %>" loading="lazy" />
+      </a>
+      <div class="trip-body">
+        <span class="trip-status trip-status--<%= trip.status %>"><%= trip.status %></span>
+        <span class="trip-title"><%= trip.listing.title %></span>
+        <span class="trip-dates">
+          <i class="fa-regular fa-calendar me-1"></i>
+          <%= new Date(trip.checkIn).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) %>
+          &rarr;
+          <%= new Date(trip.checkOut).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
+        </span>
+        <div class="trip-total">
+          <span>Total</span>
+          <span class="trip-total-value">&#8377;<%= trip.total.toLocaleString('en-IN') %></span>
+        </div>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+  <% } %>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     CONFIRM CANCEL TRIP MODAL (LUMINA & PIXEL)
+     ═══════════════════════════════════════════ -->
+<div class="modal fade glass-modal" id="cancelTripModal" tabindex="-1" aria-labelledby="cancelTripModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content cancel-modal-content">
+      <div class="modal-header border-0 pb-0 d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center gap-2">
+          <span class="cancel-modal-icon-badge"><i class="fa-solid fa-triangle-exclamation"></i></span>
+          <h5 class="modal-title fw-bold mb-0" id="cancelTripModalLabel">Cancel Reservation?</h5>
+        </div>
+        <button type="button" class="btn-close glass-close-btn" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4 pt-3">
+        <p class="cancel-modal-desc mb-2">
+          Are you sure you want to cancel your stay at <strong id="cancel-modal-stay-title" class="text-dark">this stay</strong>?
+        </p>
+        <div class="cancel-modal-warning-box mb-3">
+          <i class="fa-solid fa-circle-info me-2 text-danger"></i>
+          <span>Your booked dates will be reopened for other guests immediately.</span>
+        </div>
+        <form id="cancel-trip-form" method="POST" action="">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+          <div class="d-flex align-items-center justify-content-end gap-2 mt-4 flex-wrap">
+            <button type="button" class="btn btn-secondary cancel-modal-keep-btn" data-bs-dismiss="modal">
+              Keep Reservation
+            </button>
+            <button type="submit" class="btn btn-danger cancel-modal-confirm-btn">
+              <i class="fa-solid fa-trash-can me-1"></i> Yes, Cancel Trip
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

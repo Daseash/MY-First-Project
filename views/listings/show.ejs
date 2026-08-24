@@ -1,0 +1,639 @@
+<% layout('layouts/boilerplate') %>
+
+<%
+  let avgRating = 0;
+  if (Listing.reviews && Listing.reviews.length > 0) {
+    let sum = Listing.reviews.reduce((acc, r) => acc + r.rating, 0);
+    avgRating = (sum / Listing.reviews.length).toFixed(1);
+  }
+  let isWishlisted = typeof wishlistSet !== 'undefined' && wishlistSet && wishlistSet.has(String(Listing._id));
+%>
+
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+  crossorigin=""
+/>
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin=""
+></script>
+
+<div class="container-xl">
+  <% if (typeof err !== 'undefined' && err === 'dates') { %>
+  <div class="alert-bar alert-bar--error">
+    <i class="fa-solid fa-circle-exclamation me-2"></i>
+    Sorry — those dates are unavailable (<%= defaultCheckIn %> to <%= defaultCheckOut %> is already booked).
+    Pick a different range below.
+  </div>
+  <% } %>
+
+  <div class="show-header">
+    <div>
+      <h1 class="show-title"><%= Listing.title %></h1>
+      <div class="show-meta">
+        <span class="rating"
+          ><% if (avgRating > 0) { %><i class="fa-solid fa-star"></i> <%= avgRating %><% } else { %>New<% } %></span
+        >
+        <span class="dot"></span>
+        <span><%= Listing.reviews ? Listing.reviews.length : 0 %> reviews</span>
+        <span class="dot"></span>
+        <span><i class="fa-solid fa-location-dot"></i> <%= Listing.location %>, <%= Listing.country %></span>
+      </div>
+    </div>
+    <div class="show-actions">
+      <button type="button" class="show-action-btn" id="share-btn">
+        <i class="fa-solid fa-share-nodes"></i> Share
+      </button>
+      <form method="post" action="/wishlist/<%= Listing._id %>/toggle">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <button type="submit" class="show-action-btn <%= isWishlisted ? 'wishlist-btn--saved' : '' %>">
+          <i class="fa-<%= isWishlisted ? 'solid' : 'regular' %> fa-heart"></i>
+          <%= isWishlisted ? 'Saved' : 'Save' %>
+        </button>
+      </form>
+      <% if (typeof currentUser !== 'undefined' && currentUser && Listing.owner && (String(currentUser._id) === String(Listing.owner._id || Listing.owner))) { %>
+      <a href="/listings/<%= Listing._id %>/edit" class="show-action-btn glass-edit-btn" title="Edit listing">
+        <span class="material-symbols-outlined edit-icon">edit</span>
+        <span>Edit</span>
+      </a>
+      <form method="post" action="/listings/<%= Listing._id %>?_method=DELETE">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <button type="submit" class="show-action-btn glass-delete-btn" onclick="return confirm('Delete this listing permanently?');" title="Delete listing">
+          <span class="material-symbols-outlined delete-icon">delete</span>
+          <span>Delete</span>
+        </button>
+      </form>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="show-hero">
+    <img src="<%= Listing.image.url || Listing.image %>" alt="<%= Listing.title %>" />
+    <% if (typeof currentUser !== 'undefined' && currentUser && Listing.owner && (String(currentUser._id) === String(Listing.owner._id || Listing.owner))) { %>
+    <a href="/listings/<%= Listing._id %>/edit" class="show-hero-glass-edit" title="Edit listing">
+      <span class="material-symbols-outlined">edit</span>
+      <span>Edit listing</span>
+    </a>
+    <% } %>
+  </div>
+
+  <div class="host-card">
+    <div class="host-avatar"><i class="fa-solid fa-user"></i></div>
+    <div class="host-info">
+      <div class="host-name">Hosted by <strong><%= Listing.owner ? Listing.owner.username : 'WanderLust' %></strong></div>
+      <div class="host-meta"><i class="fa-solid fa-certificate"></i> Superhost &middot; 4 years hosting &middot; &#9733; 100% response rate</div>
+    </div>
+    <a href="#" class="btn btn-outline-dark btn-sm" onclick="return false;">Message host</a>
+  </div>
+
+  <div class="show-layout">
+    <div class="show-main">
+      <section class="show-section">
+        <h3>About this stay</h3>
+        <p class="show-description">
+          <%= Listing.description || "A handpicked stay with comfortable amenities, thoughtful design, and a location you will love. Relax, unwind, and make yourself at home." %>
+        </p>
+      </section>
+
+      <section class="show-section">
+        <h3>What this place offers</h3>
+        <div class="details-grid">
+          <div class="detail-item">
+            <i class="fa-solid fa-indian-rupee-sign"></i>
+            <div>
+              <span class="detail-label">Rate</span>
+              <span class="detail-value">&#8377;<%= Listing.price ? Listing.price.toLocaleString("en-IN") : '0' %> / night</span>
+            </div>
+          </div>
+          <div class="detail-item">
+            <i class="fa-solid fa-shield-halved"></i>
+            <div>
+              <span class="detail-label">Verification</span>
+              <span class="detail-value">Host verified</span>
+            </div>
+          </div>
+          <div class="detail-item">
+            <i class="fa-solid fa-users"></i>
+            <div>
+              <span class="detail-label">Guests</span>
+              <span class="detail-value">Up to 16 guests</span>
+            </div>
+          </div>
+          <div class="detail-item">
+            <i class="fa-solid fa-bed"></i>
+            <div>
+              <span class="detail-label">Sleeps</span>
+              <span class="detail-value">Cozy &amp; comfortable</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="show-section calendar-section">
+        <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+          <div>
+            <h3 class="mb-1" id="cal-heading">Select check-in date</h3>
+            <p class="text-muted small mb-0" id="cal-subheading">Minimum stay: 1 night</p>
+          </div>
+          <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill fw-semibold" id="cal-clear-btn" style="display: none;">
+            <i class="fa-solid fa-rotate-left me-1"></i> Clear dates
+          </button>
+        </div>
+
+        <div class="airbnb-calendar-wrapper">
+          <div class="airbnb-cal-header">
+            <span class="airbnb-cal-title" id="cal-range-title">Select dates</span>
+            <div class="airbnb-cal-nav">
+              <button type="button" class="airbnb-cal-btn" id="cal-prev-month" aria-label="Previous month"><i class="fa-solid fa-chevron-left"></i></button>
+              <button type="button" class="airbnb-cal-btn" id="cal-next-month" aria-label="Next month"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+          </div>
+
+          <div class="airbnb-cal-grid-container" id="cal-months-grid">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </section>
+
+      <section class="show-section">
+        <h3>Where you'll be</h3>
+        <p class="show-description mb-2">
+          <i class="fa-solid fa-location-dot me-1"></i> <%= Listing.location %>, <%= Listing.country %>
+        </p>
+        <div id="stay-map" class="stay-map" data-place="<%= Listing.location %>, <%= Listing.country %>"></div>
+      </section>
+
+      <section class="show-section">
+        <div class="reviews-title-row">
+          <h3 class="mb-0">Guest reviews</h3>
+          <% if (Listing.reviews && Listing.reviews.length > 0) { %>
+          <span class="reviews-avg"
+            ><i class="fa-solid fa-star"></i> <%= avgRating %> · <%= Listing.reviews.length %> reviews</span
+          >
+          <% } %>
+        </div>
+
+        <div class="review-form-card">
+          <h4 class="mb-3 section-subtitle">
+            Leave a review
+          </h4>
+          <form action="/listings/<%= Listing._id %>/reviews" method="POST" class="needs-validation" novalidate>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <div class="mb-3">
+              <label class="form-label">Rating</label>
+              <div class="star-rating">
+                <input type="radio" id="star5" name="review[rating]" value="5" required />
+                <label for="star5" title="5 stars"><i class="fa-solid fa-star"></i></label>
+                <input type="radio" id="star4" name="review[rating]" value="4" />
+                <label for="star4" title="4 stars"><i class="fa-solid fa-star"></i></label>
+                <input type="radio" id="star3" name="review[rating]" value="3" />
+                <label for="star3" title="3 stars"><i class="fa-solid fa-star"></i></label>
+                <input type="radio" id="star2" name="review[rating]" value="2" />
+                <label for="star2" title="2 stars"><i class="fa-solid fa-star"></i></label>
+                <input type="radio" id="star1" name="review[rating]" value="1" />
+                <label for="star1" title="1 star"><i class="fa-solid fa-star"></i></label>
+              </div>
+              <div class="invalid-feedback">Please select a star rating.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="comment" class="form-label">Your comments</label>
+              <textarea
+                name="review[comment]"
+                id="comment"
+                cols="30"
+                rows="4"
+                class="form-control"
+                placeholder="Share details of your stay..."
+                required
+              ></textarea>
+              <div class="invalid-feedback">Please add some comments.</div>
+            </div>
+
+            <button type="submit" class="btn btn-accent">
+              <i class="fa-solid fa-paper-plane me-1"></i> Submit review
+            </button>
+          </form>
+        </div>
+
+        <% if (!Listing.reviews || Listing.reviews.length === 0) { %>
+        <div class="no-reviews">
+          <i class="fa-regular fa-comment-dots"></i>
+          <p>No reviews yet. Be the first guest to share your experience!</p>
+        </div>
+        <% } else { %>
+        <div class="reviews-grid">
+          <% for(let review of Listing.reviews) { %>
+          <div class="review-card">
+            <div class="review-card-header">
+              <div class="reviewer-avatar"><i class="fa-solid fa-user"></i></div>
+              <div>
+                <div class="reviewer-name"><strong><%= review.author ? review.author.username : 'Verified guest' %></strong></div>
+                <div class="review-date">
+                  <%= review.createdAt ? new Date(review.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recent stay' %>
+                </div>
+              </div>
+              <span class="review-rating-badge"
+                ><i class="fa-solid fa-star"></i> <%= review.rating %></span
+              >
+            </div>
+            <p class="review-comment-text">"<%= review.comment %>"</p>
+            <% if (typeof currentUser !== 'undefined' && currentUser && review.author && (String(currentUser._id) === String(review.author._id || review.author))) { %>
+            <form method="POST" action="/listings/<%= Listing._id %>/reviews/<%= review._id %>?_method=DELETE">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+              <button type="submit" class="btn-delete-review" onclick="return confirm('Delete this review?');">
+                <i class="fa-solid fa-trash-can me-1"></i> Delete
+              </button>
+            </form>
+            <% } %>
+          </div>
+          <% } %>
+        </div>
+        <% } %>
+      </section>
+    </div>
+
+    <aside class="booking-card">
+      <form method="post" action="/bookings" id="booking-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <input type="hidden" name="listingId" value="<%= Listing._id %>" />
+        <input type="hidden" name="guests" id="booking-guests" value="1" />
+
+        <div class="booking-header">
+          <p class="booking-price" data-price="<%= Listing.price || 0 %>">
+            &#8377;<%= Listing.price ? Listing.price.toLocaleString("en-IN") : '0' %>
+            <span>/ night</span>
+          </p>
+          <span class="rating-pill"><% if (avgRating > 0) { %><i class="fa-solid fa-star"></i> <%= avgRating %><% } else { %>New<% } %></span>
+        </div>
+
+        <% if (typeof bookedRanges !== 'undefined' && bookedRanges.length > 0) { %>
+        <div class="booked-ranges">
+          <i class="fa-solid fa-calendar-xmark me-1"></i>
+          <%= bookedRanges.map(r => r.checkIn.toISOString().slice(0,10) + ' – ' + r.checkOut.toISOString().slice(0,10)).join(', ') %>
+        </div>
+        <% } %>
+
+        <div class="booking-fields">
+          <div class="booking-field">
+            <label for="booking-checkin">Check in</label>
+            <input type="date" id="booking-checkin" name="checkIn" value="<%= typeof defaultCheckIn !== 'undefined' ? defaultCheckIn : '' %>" class="field-date" aria-label="Check-in date" required />
+          </div>
+          <div class="booking-field">
+            <label for="booking-checkout">Check out</label>
+            <input type="date" id="booking-checkout" name="checkOut" value="<%= typeof defaultCheckOut !== 'undefined' ? defaultCheckOut : '' %>" class="field-date" aria-label="Check-out date" required />
+          </div>
+        </div>
+
+        <div class="guest-row">
+          <span class="guest-label">Guests</span>
+          <div class="guest-controls">
+            <button type="button" class="guest-btn" id="guest-minus" aria-label="Decrease guests" disabled>
+              <i class="fa-solid fa-minus"></i>
+            </button>
+            <span class="guest-count" id="guest-count">1</span>
+            <button type="button" class="guest-btn" id="guest-plus" aria-label="Increase guests">
+              <i class="fa-solid fa-plus"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="stay-summary" id="stay-summary" aria-live="polite">
+          <div class="sum-row">
+            <span><span id="sum-nights">0</span> nights &times; &#8377;<span id="sum-rate">0</span></span>
+            <span>&#8377;<span id="sum-subtotal">0</span></span>
+          </div>
+          <div class="sum-row">
+            <span>Cleaning fee (8%)</span>
+            <span>&#8377;<span id="sum-cleaning">0</span></span>
+          </div>
+          <div class="sum-row">
+            <span>Service fee (12%)</span>
+            <span>&#8377;<span id="sum-service">0</span></span>
+          </div>
+          <div class="sum-total">
+            <span>Total for <span id="sum-guests">1</span> guest<span id="sum-guests-suffix"></span></span>
+            <span>&#8377;<span id="sum-total">0</span></span>
+          </div>
+        </div>
+
+        <p class="booking-note">
+          <i class="fa-solid fa-check"></i> Free cancellation before <em>48 hours</em> of check-in
+        </p>
+
+        <div class="booking-actions">
+          <button type="submit" class="btn btn-accent btn-lg" id="reserve-btn">
+            <i class="fa-solid fa-arrow-right me-1"></i> Reserve
+          </button>
+        </div>
+      </form>
+    </aside>
+  </div>
+
+  <% if (typeof similarListings !== 'undefined' && similarListings.length > 0) { %>
+  <section class="similar-section mt-5 pt-4">
+    <div class="section-row">
+      <div>
+        <h2 class="section-title">Similar stays in <%= Listing.country %></h2>
+        <p>Explore more homes guests are loving near <%= Listing.location %>.</p>
+      </div>
+      <a class="link-arrow" href="/listings"
+        >Show all stays <i class="fa-solid fa-arrow-right"></i
+      ></a>
+    </div>
+    <div class="listing-grid">
+      <% similarListings.forEach((item) => { %>
+      <div class="listing-card">
+        <a href="/listings/<%= item._id %>" class="card-link">
+          <div class="card-media">
+            <img
+              src="<%= item.image.url %>"
+              alt="<%= item.title %>"
+              loading="lazy"
+            />
+          </div>
+          <div class="card-body">
+            <div class="card-row">
+              <h3 class="card-title"><%= item.location %>, <%= item.country %></h3>
+              <% if (item._avgRating) { %>
+              <span class="card-rating"><i class="fa-solid fa-star"></i> <%= item._avgRating.toFixed(1) %></span>
+              <% } else { %>
+              <span class="card-rating card-rating--new">New</span>
+              <% } %>
+            </div>
+            <p class="card-subtitle"><%= item.title %></p>
+            <p class="card-price">
+              &#8377;<%= item.price.toLocaleString("en-IN") %> <span>/ night</span>
+            </p>
+          </div>
+        </a>
+        <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+        <form method="post" action="/wishlist/<%= item._id %>/toggle" class="wishlist-form">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+          <button type="submit" class="wishlist-btn" aria-label="Save to wishlist">
+            <i class="fa-regular fa-heart"></i>
+          </button>
+        </form>
+        <% } %>
+      </div>
+      <% }); %>
+    </div>
+  </section>
+  <% } %>
+</div>
+
+<script>
+  (function () {
+    var mapEl = document.getElementById("stay-map");
+    if (!mapEl || typeof L === "undefined") return;
+    var map = L.map("stay-map").setView([20, 0], 2);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 18,
+      attribution: "&copy; OpenStreetMap contributors",
+    }).addTo(map);
+
+    var place = mapEl.getAttribute("data-place");
+    var geocodeUrl =
+      "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" +
+      encodeURIComponent(place);
+
+    fetch(geocodeUrl, { headers: { "Accept-Language": "en" } })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (data && data.length) {
+          var lat = parseFloat(data[0].lat);
+          var lon = parseFloat(data[0].lon);
+          map.setView([lat, lon], 12);
+          L.marker([lat, lon]).addTo(map)
+            .bindPopup(place)
+            .openPopup();
+        } else {
+          mapEl.innerHTML =
+            '<div class="map-empty"><i class="fa-solid fa-map-location-dot"></i> Map preview unavailable for this location.</div>';
+        }
+      })
+      .catch(function () {
+        mapEl.innerHTML =
+          '<div class="map-empty"><i class="fa-solid fa-map-location-dot"></i> Map preview unavailable.</div>';
+      });
+  })();
+
+  /* Airbnb Visual Dual-Month Interactive Calendar */
+  (function initAirbnbCalendar() {
+    var container = document.getElementById("cal-months-grid");
+    var checkinInput = document.getElementById("booking-checkin");
+    var checkoutInput = document.getElementById("booking-checkout");
+    var headingEl = document.getElementById("cal-heading");
+    var subheadingEl = document.getElementById("cal-subheading");
+    var clearBtn = document.getElementById("cal-clear-btn");
+    var prevBtn = document.getElementById("cal-prev-month");
+    var nextBtn = document.getElementById("cal-next-month");
+    var rangeTitle = document.getElementById("cal-range-title");
+
+    if (!container || !checkinInput || !checkoutInput) return;
+
+    var bookedRanges = [];
+    var rangesEl = document.querySelector(".booked-ranges");
+    if (rangesEl) {
+      var raw = rangesEl.textContent;
+      var re = /(\d{4}-\d{2}-\d{2})\s*–\s*(\d{4}-\d{2}-\d{2})/g;
+      var m;
+      while ((m = re.exec(raw)) !== null) {
+        bookedRanges.push({
+          start: new Date(m[1] + "T00:00:00"),
+          end: new Date(m[2] + "T00:00:00"),
+        });
+      }
+    }
+
+    var currentDate = new Date();
+    var currentMonth1 = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+
+    var startDate = checkinInput.value ? new Date(checkinInput.value + "T00:00:00") : null;
+    var endDate = checkoutInput.value ? new Date(checkoutInput.value + "T00:00:00") : null;
+    var hoverDate = null;
+
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    function isDateBooked(d) {
+      return bookedRanges.some(function (r) {
+        return d >= r.start && d < r.end;
+      });
+    }
+
+    function isDateDisabled(d) {
+      return d < today || isDateBooked(d);
+    }
+
+    function render() {
+      var month2 = new Date(currentMonth1.getFullYear(), currentMonth1.getMonth() + 1, 1);
+      var months = [currentMonth1, month2];
+
+      container.innerHTML = months.map(function (m) {
+        return renderMonthHTML(m);
+      }).join("");
+
+      updateHeader();
+      attachListeners();
+    }
+
+    function renderMonthHTML(monthDate) {
+      var year = monthDate.getFullYear();
+      var month = monthDate.getMonth();
+      var monthName = monthDate.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+      var firstDayIndex = new Date(year, month, 1).getDay();
+      var totalDays = new Date(year, month + 1, 0).getDate();
+
+      var daysHTML = "";
+      for (var i = 0; i < firstDayIndex; i++) {
+        daysHTML += "<div></div>";
+      }
+
+      for (var day = 1; day <= totalDays; day++) {
+        var d = new Date(year, month, day);
+        d.setHours(0, 0, 0, 0);
+        var isoStr = d.toISOString().split("T")[0];
+        var disabled = isDateDisabled(d);
+        var booked = isDateBooked(d);
+
+        var classes = ["cal-day"];
+        if (disabled) classes.push("day-disabled");
+        if (booked) classes.push("day-booked");
+
+        var timeVal = d.getTime();
+        var startTime = startDate ? startDate.getTime() : null;
+        var endTime = endDate ? endDate.getTime() : null;
+        var hoverTime = hoverDate ? hoverDate.getTime() : null;
+
+        if (startTime && timeVal === startTime) {
+          classes.push("day-start");
+        } else if (endTime && timeVal === endTime) {
+          classes.push("day-end");
+        } else if (startTime && endTime && timeVal > startTime && timeVal < endTime) {
+          classes.push("day-in-range");
+        } else if (startTime && !endTime && hoverTime && timeVal > startTime && timeVal <= hoverTime) {
+          classes.push("day-in-range-hover");
+        }
+
+        daysHTML += '<button type="button" class="' + classes.join(" ") + '" data-date="' + isoStr + '" ' + (disabled ? 'disabled' : '') + '>' + day + '</button>';
+      }
+
+      return '<div class="airbnb-month">' +
+        '<div class="airbnb-cal-month-title">' + monthName + '</div>' +
+        '<div class="airbnb-cal-weekdays">' +
+          '<span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>' +
+        '</div>' +
+        '<div class="airbnb-cal-days">' + daysHTML + '</div>' +
+      '</div>';
+    }
+
+    function updateHeader() {
+      if (startDate && endDate) {
+        var nights = Math.round((endDate - startDate) / (1000 * 60 * 60 * 24));
+        if (headingEl) headingEl.textContent = nights + " night" + (nights > 1 ? "s" : "");
+        if (subheadingEl) subheadingEl.textContent = formatDate(startDate) + " – " + formatDate(endDate);
+        if (rangeTitle) rangeTitle.textContent = nights + " nights selected";
+        if (clearBtn) clearBtn.style.display = "inline-flex";
+      } else if (startDate) {
+        if (headingEl) headingEl.textContent = "Select check-out date";
+        if (subheadingEl) subheadingEl.textContent = "Check-in: " + formatDate(startDate);
+        if (rangeTitle) rangeTitle.textContent = "Select check-out date";
+        if (clearBtn) clearBtn.style.display = "inline-flex";
+      } else {
+        if (headingEl) headingEl.textContent = "Select check-in date";
+        if (subheadingEl) subheadingEl.textContent = "Add your travel dates for exact pricing";
+        if (rangeTitle) rangeTitle.textContent = "Select dates";
+        if (clearBtn) clearBtn.style.display = "none";
+      }
+    }
+
+    function formatDate(d) {
+      return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    }
+
+    function attachListeners() {
+      container.querySelectorAll(".cal-day:not(.day-disabled)").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var iso = btn.getAttribute("data-date");
+          var clicked = new Date(iso + "T00:00:00");
+
+          if (!startDate || (startDate && endDate)) {
+            startDate = clicked;
+            endDate = null;
+            checkinInput.value = iso;
+            checkoutInput.value = "";
+          } else if (startDate && !endDate) {
+            if (clicked <= startDate) {
+              startDate = clicked;
+              checkinInput.value = iso;
+            } else {
+              endDate = clicked;
+              checkoutInput.value = iso;
+            }
+          }
+
+          checkinInput.dispatchEvent(new Event("change"));
+          checkoutInput.dispatchEvent(new Event("change"));
+
+          render();
+        });
+
+        btn.addEventListener("mouseenter", function () {
+          if (startDate && !endDate) {
+            var iso = btn.getAttribute("data-date");
+            hoverDate = new Date(iso + "T00:00:00");
+            renderHover();
+          }
+        });
+      });
+    }
+
+    function renderHover() {
+      container.querySelectorAll(".cal-day").forEach(function (btn) {
+        var iso = btn.getAttribute("data-date");
+        if (!iso) return;
+        var d = new Date(iso + "T00:00:00").getTime();
+        var st = startDate ? startDate.getTime() : null;
+        var ht = hoverDate ? hoverDate.getTime() : null;
+
+        if (st && ht && d > st && d <= ht) {
+          btn.classList.add("day-in-range-hover");
+        } else {
+          btn.classList.remove("day-in-range-hover");
+        }
+      });
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener("click", function () {
+        currentMonth1.setMonth(currentMonth1.getMonth() - 1);
+        render();
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener("click", function () {
+        currentMonth1.setMonth(currentMonth1.getMonth() + 1);
+        render();
+      });
+    }
+
+    if (clearBtn) {
+      clearBtn.addEventListener("click", function () {
+        startDate = null;
+        endDate = null;
+        checkinInput.value = "";
+        checkoutInput.value = "";
+        checkinInput.dispatchEvent(new Event("change"));
+        checkoutInput.dispatchEvent(new Event("change"));
+        render();
+      });
+    }
+
+    render();
+  })();
+</script>

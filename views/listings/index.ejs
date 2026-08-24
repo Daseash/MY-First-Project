@@ -1,0 +1,180 @@
+<% layout('layouts/boilerplate') %>
+
+<%
+  const f = (typeof filters !== 'undefined' && filters) ? filters : {};
+  const wl = (typeof wishlistSet !== 'undefined' && wishlistSet) ? wishlistSet : new Set();
+  const hasPriceFilter = Boolean(f.minPrice || f.maxPrice);
+  const activeCount = (f.minPrice ? 1 : 0) + (f.maxPrice ? 1 : 0) + (f.sort ? 1 : 0);
+%>
+
+<div class="container-xl">
+  <div class="section-row">
+    <div>
+      <h1 class="page-title">Stays</h1>
+      <p class="page-subtitle" id="stays-count">
+        <%= (typeof allListings !== 'undefined' && allListings && allListings.length) ? allListings.length : 0 %>
+        places to stay
+      </p>
+      <% if (typeof searchTerm !== 'undefined' && searchTerm) { %>
+      <p class="page-subtitle badge-search-term mt-1">
+        Results for &ldquo;<strong><%= searchTerm %></strong>&rdquo;
+        <% if (checkin) { %> &middot; Check-in <%= checkin %> <% } %>
+        <% if (checkout) { %> &middot; Check-out <%= checkout %> <% } %>
+        <% if (guests) { %> &middot; <%= guests %> guest(s) <% } %>
+        <a href="/listings" class="ms-2 text-decoration-none">&times; clear</a>
+      </p>
+      <% } %>
+    </div>
+    <a href="/listings/new" class="btn btn-accent btn-lg">
+      <i class="fa-solid fa-plus me-1"></i> Add New Stay
+    </a>
+  </div>
+
+  <div class="stays-filter-header d-flex align-items-center justify-content-between gap-3 mb-4 flex-wrap">
+    <div class="categories flex-grow-1 mb-0 overflow-hidden">
+      <%- include('../includes/categories') %>
+    </div>
+    
+    <button type="button" class="filter-trigger-btn" data-bs-toggle="modal" data-bs-target="#filterModal">
+      <i class="fa-solid fa-sliders"></i>
+      <span>Filters</span>
+      <% if (activeCount > 0) { %>
+        <span class="filter-count-badge"><%= activeCount %></span>
+      <% } %>
+    </button>
+  </div>
+
+  <% if (hasPriceFilter) { %>
+  <div class="active-filters-bar mb-4">
+    <span class="text-muted me-1 fw-medium"><i class="fa-solid fa-filter me-1"></i> Active filters:</span>
+    <% if (f.minPrice && f.maxPrice) { %>
+      <span class="badge bg-light text-dark border px-3 py-2 rounded-pill font-monospace fw-normal">Price: &#8377;<%= Number(f.minPrice).toLocaleString("en-IN") %> &ndash; &#8377;<%= Number(f.maxPrice).toLocaleString("en-IN") %></span>
+    <% } else if (f.minPrice) { %>
+      <span class="badge bg-light text-dark border px-3 py-2 rounded-pill font-monospace fw-normal">Min price: &#8377;<%= Number(f.minPrice).toLocaleString("en-IN") %></span>
+    <% } else if (f.maxPrice) { %>
+      <span class="badge bg-light text-dark border px-3 py-2 rounded-pill font-monospace fw-normal">Max price: &#8377;<%= Number(f.maxPrice).toLocaleString("en-IN") %></span>
+    <% } %>
+
+    <a href="/listings" class="ms-auto btn btn-sm btn-link text-danger text-decoration-none fw-semibold">
+      <i class="fa-solid fa-rotate-left me-1"></i> Clear all
+    </a>
+  </div>
+  <% } %>
+
+  <!-- Filter Modal -->
+  <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+      <div class="modal-content rounded-4 border-0 shadow-lg">
+        <form method="get" action="/listings">
+          <input type="hidden" name="search" value="<%= typeof searchTerm !== 'undefined' ? searchTerm : '' %>" />
+          
+          <div class="modal-header border-bottom py-3 px-4">
+            <h5 class="modal-title fw-bold fs-5" id="filterModalLabel">Filters</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          
+          <div class="modal-body p-4">
+            <!-- Price Range -->
+            <div class="mb-4">
+              <h6 class="fw-bold mb-1 fs-6">Price range</h6>
+              <p class="text-muted small mb-3">Nightly prices before taxes and fees</p>
+              
+              <!-- Quick Price Presets -->
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill price-preset" data-min="" data-max="2000">Under &#8377;2,000</button>
+                <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill price-preset" data-min="2000" data-max="5000">&#8377;2,000 &ndash; &#8377;5,000</button>
+                <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill price-preset" data-min="5000" data-max="10000">&#8377;5,000 &ndash; &#8377;10,000</button>
+                <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill price-preset" data-min="10000" data-max="">&#8377;10,000+</button>
+              </div>
+
+              <div class="row g-3 align-items-center">
+                <div class="col-6">
+                  <div class="form-floating">
+                    <input type="number" class="form-control rounded-3" id="modal-filter-min" name="minPrice" min="0" step="100" placeholder="0" value="<%= f.minPrice || '' %>">
+                    <label for="modal-filter-min">Minimum (&#8377;)</label>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-floating">
+                    <input type="number" class="form-control rounded-3" id="modal-filter-max" name="maxPrice" min="0" step="100" placeholder="Any" value="<%= f.maxPrice || '' %>">
+                    <label for="modal-filter-max">Maximum (&#8377;)</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr class="my-4" />
+
+            <!-- Sort By -->
+            <div>
+              <h6 class="fw-bold mb-3 fs-6">Sort by</h6>
+              <div class="form-group">
+                <select id="modal-filter-sort" name="sort" class="form-select form-select-lg rounded-3 fs-6">
+                  <option value="" <%= !f.sort ? 'selected' : '' %>>Recommended</option>
+                  <option value="price_asc" <%= f.sort === 'price_asc' ? 'selected' : '' %>>Price: Low to high</option>
+                  <option value="price_desc" <%= f.sort === 'price_desc' ? 'selected' : '' %>>Price: High to low</option>
+                  <option value="newest" <%= f.sort === 'newest' ? 'selected' : '' %>>Newest first</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer border-top d-flex justify-content-between p-3 px-4">
+            <a href="/listings" class="btn btn-link text-dark text-decoration-underline fw-semibold ps-0">Clear all</a>
+            <button type="submit" class="btn btn-dark btn-lg rounded-3 px-4 fs-6 fw-semibold">Apply filters</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <% if (typeof allListings === 'undefined' || !allListings || allListings.length === 0) { %>
+  <div class="empty-state">
+    <i class="fa-solid fa-compass"></i>
+    <h3>No stays found</h3>
+    <p>Try widening your budget or clearing filters.</p>
+    <a href="/listings" class="btn btn-accent btn-lg">
+      <i class="fa-solid fa-magnifying-glass me-1"></i> Reset filters
+    </a>
+  </div>
+  <% } else { %>
+  <div class="listing-grid">
+    <% allListings.forEach((listing) => { %>
+    <div class="listing-card" data-category="<%= listing.category || 'trending' %>" data-kw="<%= (listing.title + ' ' + (listing.description||'') + ' ' + (listing.location||'') + ' ' + (listing.country||'')).toLowerCase() %>">
+      <a href="/listings/<%= listing._id %>" class="card-link">
+        <div class="card-media">
+          <img
+            src="<%= listing.image && listing.image.url ? listing.image.url : (typeof listing.image === 'string' ? listing.image : 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=60') %>"
+            alt="<%= listing.title %>"
+            loading="lazy"
+          />
+        </div>
+        <div class="card-body">
+          <div class="card-row">
+            <h3 class="card-title"><%= listing.location %>, <%= listing.country %></h3>
+            <% if (listing._avgRating) { %>
+            <span class="card-rating"><i class="fa-solid fa-star"></i> <%= listing._avgRating.toFixed(1) %></span>
+            <% } else { %>
+            <span class="card-rating card-rating--new">New</span>
+            <% } %>
+          </div>
+          <p class="card-subtitle"><%= listing.title %></p>
+          <p class="card-price">
+            &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : '0' %>
+            <span>/ night</span>
+          </p>
+        </div>
+      </a>
+      <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+      <form method="post" action="/wishlist/<%= listing._id %>/toggle" class="wishlist-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <button type="submit" class="wishlist-btn <%= wl.has(String(listing._id)) ? 'active' : '' %>" aria-label="Toggle wishlist">
+          <i class="fa-<%= wl.has(String(listing._id)) ? 'solid' : 'regular' %> fa-heart"></i>
+        </button>
+      </form>
+      <% } %>
+    </div>
+    <% }); %>
+  </div>
+  <% } %>
+</div>

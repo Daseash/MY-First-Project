@@ -1,0 +1,61 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="form-page">
+  <div class="form-card">
+    <h2>Join Wanderlust</h2>
+    <p class="form-subtitle">
+      Create an account to explore luxury stays and leave reviews.
+    </p>
+
+    <form method="POST" action="/signup" novalidate class="needs-validation">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      <input type="hidden" name="next" value="<%= typeof next !== 'undefined' ? next : '' %>" />
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input
+          type="text"
+          id="username"
+          name="user[username]"
+          class="form-control"
+          placeholder="johndoe"
+          required
+        />
+        <div class="invalid-feedback">Please choose a username.</div>
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label">Email Address</label>
+        <input
+          type="email"
+          id="email"
+          name="user[email]"
+          class="form-control"
+          placeholder="john@example.com"
+          required
+        />
+        <div class="invalid-feedback">Please enter a valid email address.</div>
+      </div>
+
+      <div class="mb-4">
+        <label for="password" class="form-label">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="user[password]"
+          class="form-control"
+          placeholder="••••••••"
+          required
+        />
+        <div class="invalid-feedback">Please enter a password (min 4 chars).</div>
+      </div>
+
+      <button class="btn btn-accent btn-lg btn-block" type="submit">
+        <i class="fa-solid fa-user-plus me-1"></i> Sign Up
+      </button>
+
+      <p class="form-switch-link">
+        Already have an account? <a href="/login<%= typeof next !== 'undefined' && next ? '?next=' + encodeURIComponent(next) : '' %>">Log in</a>
+      </p>
+    </form>
+  </div>
+</div>

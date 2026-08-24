@@ -1,0 +1,166 @@
+<div class="categories" role="group" aria-label="Browse by category">
+  <div class="categories-scroll" id="category-scroll">
+    <a href="/listings" class="category-pill <%= (typeof selectedCategory === 'undefined' || !selectedCategory || selectedCategory === 'all') ? 'active' : '' %>" data-category="all">
+      <span class="cat-emoji">🌐</span>
+      <span class="cat-label">All Stays</span>
+    </a>
+    <a href="/listings?category=beach" class="category-pill <%= (typeof selectedCategory !== 'undefined' && selectedCategory === 'beach') ? 'active' : '' %>" data-category="beach">
+      <span class="cat-emoji">🏖️</span>
+      <span class="cat-label">Beachfront</span>
+    </a>
+    <a href="/listings?category=amazing-views" class="category-pill <%= (typeof selectedCategory !== 'undefined' && selectedCategory === 'amazing-views') ? 'active' : '' %>" data-category="amazing-views">
+      <span class="cat-emoji">🌄</span>
+      <span class="cat-label">Amazing Views</span>
+    </a>
+    <a href="/listings?category=trending" class="category-pill <%= (typeof selectedCategory !== 'undefined' && selectedCategory === 'trending') ? 'active' : '' %>" data-category="trending">
+      <span class="cat-emoji">🔥</span>
+      <span class="cat-label">Trending</span>
+    </a>
+    <a href="/listings?category=cabin" class="category-pill <%= (typeof selectedCategory !== 'undefined' && selectedCategory === 'cabin') ? 'active' : '' %>" data-category="cabin">
+      <span class="cat-emoji">🪵</span>
+      <span class="cat-label">Cabins</span>
+    </a>
+    <a href="/listings?category=lake" class="category-pill <%= (typeof selectedCategory !== 'undefined' && selectedCategory === 'lake') ? 'active' : '' %>" data-category="lake">
+      <span class="cat-emoji">⛵</span>
+      <span class="cat-label">Lakefront</span>
+    </a>
+    <a href="/listings?category=countryside" class="category-pill <%= (typeof selectedCategory !== 'undefined' && selectedCategory === 'countryside') ? 'active' : '' %>" data-category="countryside">
+      <span class="cat-emoji">🌾</span>
+      <span class="cat-label">Countryside</span>
+    </a>
+    <a href="/listings?category=treehouse" class="category-pill <%= (typeof selectedCategory !== 'undefined' && selectedCategory === 'treehouse') ? 'active' : '' %>" data-category="treehouse">
+      <span class="cat-emoji">🌲</span>
+      <span class="cat-label">Treehouses</span>
+    </a>
+    <a href="/listings?category=castle" class="category-pill <%= (typeof selectedCategory !== 'undefined' && selectedCategory === 'castle') ? 'active' : '' %>" data-category="castle">
+      <span class="cat-emoji">🏰</span>
+      <span class="cat-label">Castles</span>
+    </a>
+    <a href="/listings?category=city" class="category-pill <%= (typeof selectedCategory !== 'undefined' && selectedCategory === 'city') ? 'active' : '' %>" data-category="city">
+      <span class="cat-emoji">🏙️</span>
+      <span class="cat-label">Iconic Cities</span>
+    </a>
+    <a href="/listings?category=ski" class="category-pill <%= (typeof selectedCategory !== 'undefined' && selectedCategory === 'ski') ? 'active' : '' %>" data-category="ski">
+      <span class="cat-emoji">⛷️</span>
+      <span class="cat-label">Skiing</span>
+    </a>
+    <a href="/listings?category=luxury" class="category-pill <%= (typeof selectedCategory !== 'undefined' && selectedCategory === 'luxury') ? 'active' : '' %>" data-category="luxury">
+      <span class="cat-emoji">💎</span>
+      <span class="cat-label">Luxury</span>
+    </a>
+    <a href="/listings?category=camping" class="category-pill <%= (typeof selectedCategory !== 'undefined' && selectedCategory === 'camping') ? 'active' : '' %>" data-category="camping">
+      <span class="cat-emoji">⛺</span>
+      <span class="cat-label">Camping</span>
+    </a>
+    <a href="/listings?category=island" class="category-pill <%= (typeof selectedCategory !== 'undefined' && selectedCategory === 'island') ? 'active' : '' %>" data-category="island">
+      <span class="cat-emoji">🏝️</span>
+      <span class="cat-label">Islands</span>
+    </a>
+    <a href="/listings?category=farm" class="category-pill <%= (typeof selectedCategory !== 'undefined' && selectedCategory === 'farm') ? 'active' : '' %>" data-category="farm">
+      <span class="cat-emoji">🚜</span>
+      <span class="cat-label">Farms</span>
+    </a>
+    <a href="/listings?category=tiny" class="category-pill <%= (typeof selectedCategory !== 'undefined' && selectedCategory === 'tiny') ? 'active' : '' %>" data-category="tiny">
+      <span class="cat-emoji">🏡</span>
+      <span class="cat-label">Tiny Homes</span>
+    </a>
+    <a href="/listings?category=tropical" class="category-pill <%= (typeof selectedCategory !== 'undefined' && selectedCategory === 'tropical') ? 'active' : '' %>" data-category="tropical">
+      <span class="cat-emoji">🌴</span>
+      <span class="cat-label">Tropical</span>
+    </a>
+  </div>
+</div>
+
+<style>
+  .categories {
+    position: relative;
+    padding: 0.5rem 0 1rem;
+  }
+  .categories-scroll {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    overflow-x: auto;
+    padding: 0.5rem 0.25rem 0.75rem;
+    scrollbar-width: none;
+  }
+  .categories-scroll::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Modern Glassmorphic Pill Design */
+  .category-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--text, #222222);
+    font-size: 0.84rem;
+    font-weight: 600;
+    white-space: nowrap;
+    padding: 0.55rem 1.1rem;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+    transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    cursor: pointer;
+  }
+  
+  .category-pill:hover {
+    color: #ba0036;
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(255, 56, 92, 0.4);
+    box-shadow: 0 6px 20px rgba(255, 56, 92, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+    transform: translateY(-2px);
+  }
+  
+  .category-pill.active {
+    color: #ffffff;
+    background: linear-gradient(135deg, #ff385c 0%, #e00b41 100%);
+    border-color: #ba0036;
+    box-shadow: 0 6px 18px rgba(255, 56, 92, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.4);
+    transform: translateY(-1px);
+  }
+  
+  .cat-emoji {
+    font-size: 1.15rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    transition: transform 0.2s ease;
+  }
+  .category-pill:hover .cat-emoji {
+    transform: scale(1.15);
+  }
+  
+  /* ─── Pixel Theme Glassmorphic & Retro Overrides ─── */
+  [data-theme="pixel"] .category-pill {
+    background: rgba(18, 24, 38, 0.75) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    border: 2px solid #334155 !important;
+    color: #e2e8f0 !important;
+    border-radius: 4px !important;
+    box-shadow: 3px 3px 0px #050b14, inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+    font-family: 'Space Grotesk', monospace !important;
+    letter-spacing: 0.02em !important;
+  }
+  
+  [data-theme="pixel"] .category-pill:hover {
+    border-color: #00d2ff !important;
+    color: #00d2ff !important;
+    background: rgba(18, 24, 38, 0.9) !important;
+    box-shadow: 4px 4px 0px #050b14, 0 0 12px rgba(0, 210, 255, 0.4) !important;
+    transform: translate(-1px, -1px) !important;
+  }
+  
+  [data-theme="pixel"] .category-pill.active {
+    background: linear-gradient(135deg, #ff0055 0%, #ba0036 100%) !important;
+    border-color: #00d2ff !important;
+    color: #ffffff !important;
+    box-shadow: 4px 4px 0px #000, 0 0 16px rgba(255, 0, 85, 0.6) !important;
+  }
+</style>

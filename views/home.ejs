@@ -1,0 +1,629 @@
+<% layout('layouts/boilerplate') -%>
+
+  <% var pageClass='page-main--home' ; %>
+
+<section class="hero hero--clean" style="background: #ffffff; padding: 2.25rem 1rem 2rem; text-align: center; border-bottom: 1px solid #ebebeb;">
+  <div class="container-xl" style="max-width: 950px; margin: 0 auto;">
+    <h1 class="hero-title" style="font-size: 2.5rem; font-weight: 800; color: var(--text, #222); margin-bottom: 0.75rem; letter-spacing: -0.5px;">
+      Find Your Next Escape
+    </h1>
+    <p class="hero-sub" style="font-size: 1.1rem; color: var(--text-muted, #717171); margin-bottom: 2rem; max-width: 680px; margin-left: auto; margin-right: auto;">
+      Discover cabins, luxury lodges, villas, and one-of-a-kind stays curated for unforgettable journeys worldwide.
+    </p>
+
+    <!-- Centered Search Bar -->
+    <div style="display: flex; justify-content: center;">
+      <form class="hero-glass-pill hero-search" action="/listings" method="get" style="box-shadow: 0 4px 20px rgba(0,0,0,0.08); background: #ffffff; border: 1px solid var(--border, #ddd); border-radius: 9999px; padding: 0.5rem 0.8rem 0.5rem 1.5rem; display: inline-flex; align-items: center; gap: 0.5rem; max-width: 100%; flex-wrap: wrap;">
+        <div class="hs-field" style="text-align: left; padding: 0.25rem 0.5rem;">
+          <label for="hero-where" style="display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted, #717171);">Where</label>
+          <input id="hero-where" type="text" name="search" placeholder="Search destinations" style="border: none; outline: none; background: transparent; font-weight: 600; font-size: 0.9rem; color: var(--text, #222); width: 160px;" />
+        </div>
+        <div class="hs-divider" style="width: 1px; height: 28px; background: var(--border-soft, #eaeaea);"></div>
+        <div class="hs-field" style="text-align: left; padding: 0.25rem 0.5rem;">
+          <label for="hero-checkin" style="display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted, #717171);">Check in</label>
+          <input id="hero-checkin" type="date" name="checkin" style="border: none; outline: none; background: transparent; font-weight: 500; font-size: 0.85rem; color: var(--text, #222);" />
+        </div>
+        <div class="hs-divider" style="width: 1px; height: 28px; background: var(--border-soft, #eaeaea);"></div>
+        <div class="hs-field" style="text-align: left; padding: 0.25rem 0.5rem;">
+          <label for="hero-checkout" style="display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted, #717171);">Check out</label>
+          <input id="hero-checkout" type="date" name="checkout" style="border: none; outline: none; background: transparent; font-weight: 500; font-size: 0.85rem; color: var(--text, #222);" />
+        </div>
+        <div class="hs-divider" style="width: 1px; height: 28px; background: var(--border-soft, #eaeaea);"></div>
+        <div class="hs-field" style="text-align: left; padding: 0.25rem 0.5rem;">
+          <label for="hero-guests" style="display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted, #717171);">Guests</label>
+          <input id="hero-guests" type="number" name="guests" min="1" max="16" value="2" style="border: none; outline: none; background: transparent; font-weight: 600; font-size: 0.9rem; color: var(--text, #222); width: 60px;" />
+        </div>
+        <button class="hs-submit" type="submit" aria-label="Search" style="width: 44px; height: 44px; border-radius: 50%; background: #ff385c; color: white; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.15s ease, background 0.15s ease;">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+      <section class="container-xl pt-4">
+        <%- include('includes/categories') %>
+      </section>
+
+      <% if (typeof beachListings !=='undefined' && beachListings && beachListings.length> 0) { %>
+        <section class="container-xl pt-4">
+          <div class="section-row">
+            <div>
+              <h2 class="section-title"><span class="me-2">🏖️</span>Beachfront Escapes</h2>
+              <p>Sunny coastal cottages, ocean villas, and tropical paradises.</p>
+            </div>
+            <a class="link-arrow" href="/listings?category=beach">Explore beachfront <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+
+          <div class="listing-grid">
+            <% beachListings.forEach((listing)=> { %>
+              <div class="listing-card">
+                <a href="/listings/<%= listing._id %>" class="card-link">
+                  <div class="card-media">
+                    <img
+                      src="<%= listing.image && listing.image.url ? listing.image.url : (typeof listing.image === 'string' && listing.image ? listing.image : 'https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?auto=format&fit=crop&w=800&q=60') %>"
+                      alt="<%= listing.title %>" loading="lazy" />
+                    <span class="card-badge">🏖️ Beachfront</span>
+                  </div>
+                  <div class="card-body">
+                    <div class="card-row">
+                      <h3 class="card-title">
+                        <%= listing.location %>, <%= listing.country %>
+                      </h3>
+                      <% if (listing._avgRating) { %>
+                        <span class="card-rating"><i class="fa-solid fa-star"></i>
+                          <%= listing._avgRating.toFixed(1) %>
+                        </span>
+                        <% } else { %>
+                          <span class="card-rating card-rating--new">New</span>
+                          <% } %>
+                    </div>
+                    <p class="card-subtitle">
+                      <%= listing.title %>
+                    </p>
+                    <p class="card-price">
+                      &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : '0' %> <span>/ night</span>
+                    </p>
+                  </div>
+                </a>
+                <% if (typeof currentUser !=='undefined' && currentUser) { %>
+                  <form method="post" action="/wishlist/<%= listing._id %>/toggle" class="wishlist-form">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                    <button type="submit" class="wishlist-btn" aria-label="Save to wishlist">
+                      <i class="fa-regular fa-heart"></i>
+                    </button>
+                  </form>
+                  <% } %>
+              </div>
+              <% }); %>
+          </div>
+        </section>
+        <% } %>
+
+          <% if (typeof viewListings !=='undefined' && viewListings && viewListings.length> 0) { %>
+            <section class="container-xl pt-5">
+              <div class="section-row">
+                <div>
+                  <h2 class="section-title"><span class="me-2">🌄</span>Amazing Views &amp; Mountain Retreats</h2>
+                  <p>Alpine chalets, secluded treehouses, and mountain lodges with panoramic views.</p>
+                </div>
+                <a class="link-arrow" href="/listings?category=amazing-views">Explore mountain stays <i class="fa-solid fa-arrow-right"></i></a>
+              </div>
+
+              <div class="listing-grid">
+                <% viewListings.forEach((listing)=> { %>
+                  <div class="listing-card">
+                    <a href="/listings/<%= listing._id %>" class="card-link">
+                      <div class="card-media">
+                        <img
+                          src="<%= listing.image && listing.image.url ? listing.image.url : (typeof listing.image === 'string' && listing.image ? listing.image : 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=800&q=60') %>"
+                          alt="<%= listing.title %>" loading="lazy" />
+                        <span class="card-badge">🌄 Amazing View</span>
+                      </div>
+                      <div class="card-body">
+                        <div class="card-row">
+                          <h3 class="card-title">
+                            <%= listing.location %>, <%= listing.country %>
+                          </h3>
+                          <% if (listing._avgRating) { %>
+                            <span class="card-rating"><i class="fa-solid fa-star"></i>
+                              <%= listing._avgRating.toFixed(1) %>
+                            </span>
+                            <% } else { %>
+                              <span class="card-rating card-rating--new">New</span>
+                              <% } %>
+                        </div>
+                        <p class="card-subtitle">
+                          <%= listing.title %>
+                        </p>
+                        <p class="card-price">
+                          &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : '0' %> <span>/ night</span>
+                        </p>
+                      </div>
+                    </a>
+                    <% if (typeof currentUser !=='undefined' && currentUser) { %>
+                      <form method="post" action="/wishlist/<%= listing._id %>/toggle" class="wishlist-form">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                        <button type="submit" class="wishlist-btn" aria-label="Save to wishlist">
+                          <i class="fa-regular fa-heart"></i>
+                        </button>
+                      </form>
+                      <% } %>
+                  </div>
+                  <% }); %>
+              </div>
+            </section>
+            <% } %>
+
+              <% if (typeof trendingListings !=='undefined' && trendingListings && trendingListings.length> 0) { %>
+                <section class="container-xl pt-5">
+                  <div class="section-row">
+                    <div>
+                      <h2 class="section-title"><span class="me-2">🔥</span>Trending Destinations</h2>
+                      <p>Top-rated villas, city lofts, and historic homes booked most this season.</p>
+                    </div>
+                    <a class="link-arrow" href="/listings?category=trending">Explore trending <i class="fa-solid fa-arrow-right"></i></a>
+                  </div>
+
+                  <div class="listing-grid">
+                    <% trendingListings.forEach((listing)=> { %>
+                      <div class="listing-card">
+                        <a href="/listings/<%= listing._id %>" class="card-link">
+                          <div class="card-media">
+                            <img
+                              src="<%= listing.image && listing.image.url ? listing.image.url : (typeof listing.image === 'string' && listing.image ? listing.image : 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=60') %>"
+                              alt="<%= listing.title %>" loading="lazy" />
+                            <span class="card-badge">🔥 Trending</span>
+                          </div>
+                          <div class="card-body">
+                            <div class="card-row">
+                              <h3 class="card-title">
+                                <%= listing.location %>, <%= listing.country %>
+                              </h3>
+                              <% if (listing._avgRating) { %>
+                                <span class="card-rating"><i class="fa-solid fa-star"></i>
+                                  <%= listing._avgRating.toFixed(1) %>
+                                </span>
+                                <% } else { %>
+                                  <span class="card-rating card-rating--new">New</span>
+                                  <% } %>
+                            </div>
+                            <p class="card-subtitle">
+                              <%= listing.title %>
+                            </p>
+                            <p class="card-price">
+                              &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : '0' %> <span>/ night</span>
+                            </p>
+                          </div>
+                        </a>
+                        <% if (typeof currentUser !=='undefined' && currentUser) { %>
+                          <form method="post" action="/wishlist/<%= listing._id %>/toggle" class="wishlist-form">
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                            <button type="submit" class="wishlist-btn" aria-label="Save to wishlist">
+                              <i class="fa-regular fa-heart"></i>
+                            </button>
+                          </form>
+                          <% } %>
+                      </div>
+                      <% }); %>
+                  </div>
+                </section>
+                <% } %>
+
+                  <% if (typeof lakeListings !=='undefined' && lakeListings && lakeListings.length> 0) { %>
+                    <section class="container-xl pt-5">
+                      <div class="section-row">
+                        <div>
+                          <h2 class="section-title"><span class="me-2">⛵</span>Lakefront Escapes</h2>
+                          <p>Peaceful cabins and waterfront lodges by serene lakes.</p>
+                        </div>
+                        <a class="link-arrow" href="/listings?category=lake">Explore lakefront <i class="fa-solid fa-arrow-right"></i></a>
+                      </div>
+
+                      <div class="listing-grid">
+                        <% lakeListings.forEach((listing)=> { %>
+                          <div class="listing-card">
+                            <a href="/listings/<%= listing._id %>" class="card-link">
+                              <div class="card-media">
+                                <img
+                                  src="<%= listing.image && listing.image.url ? listing.image.url : (typeof listing.image === 'string' && listing.image ? listing.image : 'https://images.unsplash.com/photo-1578645510447-e20b4311e3ce?auto=format&fit=crop&w=800&q=60') %>"
+                                  alt="<%= listing.title %>" loading="lazy" />
+                                <span class="card-badge">⛵ Lakefront</span>
+                              </div>
+                              <div class="card-body">
+                                <div class="card-row">
+                                  <h3 class="card-title">
+                                    <%= listing.location %>, <%= listing.country %>
+                                  </h3>
+                                  <% if (listing._avgRating) { %>
+                                    <span class="card-rating"><i class="fa-solid fa-star"></i>
+                                      <%= listing._avgRating.toFixed(1) %>
+                                    </span>
+                                    <% } else { %>
+                                      <span class="card-rating card-rating--new">New</span>
+                                      <% } %>
+                                </div>
+                                <p class="card-subtitle">
+                                  <%= listing.title %>
+                                </p>
+                                <p class="card-price">
+                                  &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : '0' %> <span>/ night</span>
+                                </p>
+                              </div>
+                            </a>
+                            <% if (typeof currentUser !=='undefined' && currentUser) { %>
+                              <form method="post" action="/wishlist/<%= listing._id %>/toggle" class="wishlist-form">
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                                <button type="submit" class="wishlist-btn" aria-label="Save to wishlist">
+                                  <i class="fa-regular fa-heart"></i>
+                                </button>
+                              </form>
+                              <% } %>
+                          </div>
+                          <% }); %>
+                      </div>
+                    </section>
+                    <% } %>
+
+                      <% if (typeof countrysideListings !=='undefined' && countrysideListings &&
+                        countrysideListings.length> 0) { %>
+                        <section class="container-xl pt-5">
+                          <div class="section-row">
+                            <div>
+                              <h2 class="section-title"><span class="me-2">🌾</span>Countryside Cottages</h2>
+                              <p>Charming thatched-roof cottages and historic village stays.</p>
+                            </div>
+                            <a class="link-arrow" href="/listings?category=countryside">Explore countryside <i class="fa-solid fa-arrow-right"></i></a>
+                          </div>
+
+                          <div class="listing-grid">
+                            <% countrysideListings.forEach((listing)=> { %>
+                              <div class="listing-card">
+                                <a href="/listings/<%= listing._id %>" class="card-link">
+                                  <div class="card-media">
+                                    <img
+                                      src="<%= listing.image && listing.image.url ? listing.image.url : (typeof listing.image === 'string' && listing.image ? listing.image : 'https://images.unsplash.com/photo-1602088113235-229c19758e9f?auto=format&fit=crop&w=800&q=60') %>"
+                                      alt="<%= listing.title %>" loading="lazy" />
+                                    <span class="card-badge">🌾 Countryside</span>
+                                  </div>
+                                  <div class="card-body">
+                                    <div class="card-row">
+                                      <h3 class="card-title">
+                                        <%= listing.location %>, <%= listing.country %>
+                                      </h3>
+                                      <% if (listing._avgRating) { %>
+                                        <span class="card-rating"><i class="fa-solid fa-star"></i>
+                                          <%= listing._avgRating.toFixed(1) %>
+                                        </span>
+                                        <% } else { %>
+                                          <span class="card-rating card-rating--new">New</span>
+                                          <% } %>
+                                    </div>
+                                    <p class="card-subtitle">
+                                      <%= listing.title %>
+                                    </p>
+                                    <p class="card-price">
+                                      &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : '0' %> <span>/ night</span>
+                                    </p>
+                                  </div>
+                                </a>
+                                <% if (typeof currentUser !=='undefined' && currentUser) { %>
+                                  <form method="post" action="/wishlist/<%= listing._id %>/toggle"
+                                    class="wishlist-form">
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                                    <button type="submit" class="wishlist-btn" aria-label="Save to wishlist">
+                                      <i class="fa-regular fa-heart"></i>
+                                    </button>
+                                  </form>
+                                  <% } %>
+                              </div>
+                              <% }); %>
+                          </div>
+                        </section>
+                        <% } %>
+
+                          <% if (typeof treehouseListings !=='undefined' && treehouseListings &&
+                            treehouseListings.length> 0) { %>
+                            <section class="container-xl pt-5">
+                              <div class="section-row">
+                                <div>
+                                  <h2 class="section-title"><span class="me-2">🌲</span>Treehouse Getaways</h2>
+                                  <p>Live among the forest canopy in unique eco treehouses.</p>
+                                </div>
+                                <a class="link-arrow" href="/listings?category=treehouse">Explore treehouses <i class="fa-solid fa-arrow-right"></i></a>
+                              </div>
+
+                              <div class="listing-grid">
+                                <% treehouseListings.forEach((listing)=> { %>
+                                  <div class="listing-card">
+                                    <a href="/listings/<%= listing._id %>" class="card-link">
+                                      <div class="card-media">
+                                        <img
+                                          src="<%= listing.image && listing.image.url ? listing.image.url : (typeof listing.image === 'string' && listing.image ? listing.image : 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800&q=60') %>"
+                                          alt="<%= listing.title %>" loading="lazy" />
+                                        <span class="card-badge">🌲 Treehouse</span>
+                                      </div>
+                                      <div class="card-body">
+                                        <div class="card-row">
+                                          <h3 class="card-title">
+                                            <%= listing.location %>, <%= listing.country %>
+                                          </h3>
+                                          <% if (listing._avgRating) { %>
+                                            <span class="card-rating"><i class="fa-solid fa-star"></i>
+                                              <%= listing._avgRating.toFixed(1) %>
+                                            </span>
+                                            <% } else { %>
+                                              <span class="card-rating card-rating--new">New</span>
+                                              <% } %>
+                                        </div>
+                                        <p class="card-subtitle">
+                                          <%= listing.title %>
+                                        </p>
+                                        <p class="card-price">
+                                          &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : '0' %>
+                                            <span>/ night</span>
+                                        </p>
+                                      </div>
+                                    </a>
+                                    <% if (typeof currentUser !=='undefined' && currentUser) { %>
+                                      <form method="post" action="/wishlist/<%= listing._id %>/toggle"
+                                        class="wishlist-form">
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                                        <button type="submit" class="wishlist-btn" aria-label="Save to wishlist">
+                                          <i class="fa-regular fa-heart"></i>
+                                        </button>
+                                      </form>
+                                      <% } %>
+                                  </div>
+                                  <% }); %>
+                              </div>
+                            </section>
+                            <% } %>
+
+                              <% if (typeof skiListings !=='undefined' && skiListings && skiListings.length> 0) { %>
+                                <section class="container-xl pt-5">
+                                  <div class="section-row">
+                                    <div>
+                                      <h2 class="section-title"><span class="me-2">⛷️</span>Ski-In/Ski-Out Chalets</h2>
+                                      <p>Hit the slopes right from your doorstep in alpine chalets.</p>
+                                    </div>
+                                    <a class="link-arrow" href="/listings?category=ski">Explore ski chalets <i class="fa-solid fa-arrow-right"></i></a>
+                                  </div>
+
+                                  <div class="listing-grid">
+                                    <% skiListings.forEach((listing)=> { %>
+                                      <div class="listing-card">
+                                        <a href="/listings/<%= listing._id %>" class="card-link">
+                                          <div class="card-media">
+                                            <img
+                                              src="<%= listing.image && listing.image.url ? listing.image.url : (typeof listing.image === 'string' && listing.image ? listing.image : 'https://images.unsplash.com/photo-1502784444187-359ac186c5bb?auto=format&fit=crop&w=800&q=60') %>"
+                                              alt="<%= listing.title %>" loading="lazy" />
+                                            <span class="card-badge">⛷️ Ski Chalet</span>
+                                          </div>
+                                          <div class="card-body">
+                                            <div class="card-row">
+                                              <h3 class="card-title">
+                                                <%= listing.location %>, <%= listing.country %>
+                                              </h3>
+                                              <% if (listing._avgRating) { %>
+                                                <span class="card-rating"><i class="fa-solid fa-star"></i>
+                                                  <%= listing._avgRating.toFixed(1) %>
+                                                </span>
+                                                <% } else { %>
+                                                  <span class="card-rating card-rating--new">New</span>
+                                                  <% } %>
+                                            </div>
+                                            <p class="card-subtitle">
+                                              <%= listing.title %>
+                                            </p>
+                                            <p class="card-price">
+                                              &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : '0' %>
+                                                <span>/ night</span>
+                                            </p>
+                                          </div>
+                                        </a>
+                                        <% if (typeof currentUser !=='undefined' && currentUser) { %>
+                                          <form method="post" action="/wishlist/<%= listing._id %>/toggle"
+                                            class="wishlist-form">
+                                            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                                            <button type="submit" class="wishlist-btn" aria-label="Save to wishlist">
+                                              <i class="fa-regular fa-heart"></i>
+                                            </button>
+                                          </form>
+                                          <% } %>
+                                      </div>
+                                      <% }); %>
+                                  </div>
+                                </section>
+                                <% } %>
+
+                                  <% if (typeof castleListings !=='undefined' && castleListings &&
+                                    castleListings.length> 0) { %>
+                                    <section class="container-xl pt-5">
+                                      <div class="section-row">
+                                        <div>
+                                          <h2 class="section-title"><span class="me-2">🏰</span>Historic Castles</h2>
+                                          <p>Live like royalty in magnificent historic castles.</p>
+                                        </div>
+                                        <a class="link-arrow" href="/listings?category=castle">Explore castles <i class="fa-solid fa-arrow-right"></i></a>
+                                      </div>
+
+                                      <div class="listing-grid">
+                                        <% castleListings.forEach((listing)=> { %>
+                                          <div class="listing-card">
+                                            <a href="/listings/<%= listing._id %>" class="card-link">
+                                              <div class="card-media">
+                                                <img
+                                                  src="<%= listing.image && listing.image.url ? listing.image.url : (typeof listing.image === 'string' && listing.image ? listing.image : 'https://images.unsplash.com/photo-1585543805890-6051f7829f98?auto=format&fit=crop&w=800&q=60') %>"
+                                                  alt="<%= listing.title %>" loading="lazy" />
+                                                <span class="card-badge">🏰 Castle</span>
+                                              </div>
+                                              <div class="card-body">
+                                                <div class="card-row">
+                                                  <h3 class="card-title">
+                                                    <%= listing.location %>, <%= listing.country %>
+                                                  </h3>
+                                                  <% if (listing._avgRating) { %>
+                                                    <span class="card-rating"><i class="fa-solid fa-star"></i>
+                                                      <%= listing._avgRating.toFixed(1) %>
+                                                    </span>
+                                                    <% } else { %>
+                                                      <span class="card-rating card-rating--new">New</span>
+                                                      <% } %>
+                                                </div>
+                                                <p class="card-subtitle">
+                                                  <%= listing.title %>
+                                                </p>
+                                                <p class="card-price">
+                                                  &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : '0'
+                                                    %> <span>/ night</span>
+                                                </p>
+                                              </div>
+                                            </a>
+                                            <% if (typeof currentUser !=='undefined' && currentUser) { %>
+                                              <form method="post" action="/wishlist/<%= listing._id %>/toggle"
+                                                class="wishlist-form">
+                                                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                                                <button type="submit" class="wishlist-btn"
+                                                  aria-label="Save to wishlist">
+                                                  <i class="fa-regular fa-heart"></i>
+                                                </button>
+                                              </form>
+                                              <% } %>
+                                          </div>
+                                          <% }); %>
+                                      </div>
+                                    </section>
+                                    <% } %>
+
+                                      <% if (typeof featuredListings !=='undefined' && featuredListings &&
+                                        featuredListings.length> 0) { %>
+                                        <section class="container-xl pt-5">
+                                          <div class="section-row">
+                                            <div>
+                                              <h2 class="section-title"><span class="me-2">⭐</span>All Stays on WanderLust</h2>
+                                              <p>Handpicked stays loved by guests worldwide.</p>
+                                            </div>
+                                            <a class="link-arrow" href="/listings">Show all stays <i
+                                                class="fa-solid fa-arrow-right"></i></a>
+                                          </div>
+
+                                          <div class="listing-grid">
+                                            <% featuredListings.forEach((listing)=> { %>
+                                              <div class="listing-card">
+                                                <a href="/listings/<%= listing._id %>" class="card-link">
+                                                  <div class="card-media">
+                                                    <img
+                                                      src="<%= listing.image && listing.image.url ? listing.image.url : (typeof listing.image === 'string' && listing.image ? listing.image : 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=60') %>"
+                                                      alt="<%= listing.title %>" loading="lazy" />
+                                                    <span class="card-badge">⭐ Featured</span>
+                                                  </div>
+                                                  <div class="card-body">
+                                                    <div class="card-row">
+                                                      <h3 class="card-title">
+                                                        <%= listing.location %>, <%= listing.country %>
+                                                      </h3>
+                                                      <% if (listing._avgRating) { %>
+                                                        <span class="card-rating"><i class="fa-solid fa-star"></i>
+                                                          <%= listing._avgRating.toFixed(1) %>
+                                                        </span>
+                                                        <% } %>
+                                                    </div>
+                                                    <p class="card-subtitle">
+                                                      <%= listing.title %>
+                                                    </p>
+                                                    <p class="card-price">
+                                                      &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN")
+                                                        : '0' %> <span>/ night</span>
+                                                    </p>
+                                                  </div>
+                                                </a>
+                                                <% if (typeof currentUser !=='undefined' && currentUser) { %>
+                                                  <form method="post" action="/wishlist/<%= listing._id %>/toggle"
+                                                    class="wishlist-form">
+                                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                                                    <button type="submit" class="wishlist-btn"
+                                                      aria-label="Save to wishlist">
+                                                      <i class="fa-regular fa-heart"></i>
+                                                    </button>
+                                                  </form>
+                                                  <% } %>
+                                              </div>
+                                              <% }); %>
+                                          </div>
+                                        </section>
+                                        <% } %>
+
+                                          <% if (!featuredListings || featuredListings.length===0) { %>
+                                            <section class="container-xl py-5">
+                                              <div class="empty-state">
+                                                <i class="fa-solid fa-compass"></i>
+                                                <h3>The adventure starts here</h3>
+                                                <p>Be the first to publish a new stay on WanderLust.</p>
+                                                <a href="/listings/new" class="btn btn-accent btn-lg">
+                                                  <i class="fa-solid fa-plus me-1"></i> Add New Stay
+                                                </a>
+                                              </div>
+                                            </section>
+                                            <% } %>
+
+                                              <section class="promo-band">
+                                                <div class="container-xl promo-band-inner">
+                                                  <div class="promo-copy">
+                                                    <span class="promo-eyebrow">Become a host</span>
+                                                    <h2 class="promo-title">It&rsquo;s easy to start hosting and earn
+                                                      extra income</h2>
+                                                    <p class="promo-text">
+                                                      List your place on WanderLust — set your own price, share your
+                                                      space, and welcome
+                                                      guests from around the world.
+                                                    </p>
+                                                    <a href="/listings/new" class="btn btn-accent btn-lg">
+                                                      <i class="fa-solid fa-house-circle-check me-1"></i> Start hosting
+                                                    </a>
+                                                  </div>
+                                                  <div class="promo-art" aria-hidden="true">
+                                                    <div class="promo-art-card promo-art-card--1"><i
+                                                        class="fa-solid fa-key"></i></div>
+                                                    <div class="promo-art-card promo-art-card--2"><i
+                                                        class="fa-solid fa-hand-holding-dollar"></i></div>
+                                                    <div class="promo-art-card promo-art-card--3"><i
+                                                        class="fa-solid fa-map-location-dot"></i></div>
+                                                  </div>
+                                                </div>
+                                              </section>
+
+                                              <section class="container-xl trust-band">
+                                                <div class="trust-header">
+                                                  <span class="promo-eyebrow">WanderLust Cover</span>
+                                                  <h2 class="section-title">Every booking includes free protection</h2>
+                                                  <p>Your trip is protected from Host cancellations, listing
+                                                    inaccuracies, and more.</p>
+                                                </div>
+                                                <div class="trust-grid">
+                                                  <div class="trust-item">
+                                                    <i class="fa-solid fa-shield-halved"></i>
+                                                    <h4>Booking Protection Guarantee</h4>
+                                                    <p>If a Host cancels on you, find a similar or better home, or
+                                                      we&rsquo;ll refund you.</p>
+                                                  </div>
+                                                  <div class="trust-item">
+                                                    <i class="fa-solid fa-check-double"></i>
+                                                    <h4>Get-What-You-Booked Guarantee</h4>
+                                                    <p>If your stay isn&rsquo;t what you booked, we&rsquo;ll find a
+                                                      similar home or refund you.</p>
+                                                  </div>
+                                                  <div class="trust-item">
+                                                    <i class="fa-solid fa-headset"></i>
+                                                    <h4>24-hour Safety Line</h4>
+                                                    <p>Priority access to specially-trained safety agents, any time, day
+                                                      or night.</p>
+                                                  </div>
+                                                  <div class="trust-item">
+                                                    <i class="fa-solid fa-circle-exclamation"></i>
+                                                    <h4>Guest Support</h4>
+                                                    <p>Fast, friendly, round-the-clock help whenever you need it —
+                                                      before and during your trip.</p>
+                                                  </div>
+                                                </div>
+                                              </section>

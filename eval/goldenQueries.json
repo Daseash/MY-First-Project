@@ -1,0 +1,5 @@
+[
+  { "query": "beachfront stay in Goa", "expectedLocation": "Goa" },
+  { "query": "budget stay under 2000 rupees", "maxPrice": 2000 },
+  { "query": "villa in mountains", "queryKeyword": "mountain" }
+]
