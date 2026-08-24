@@ -1,12 +1,12 @@
-# 🌍 Wanderlust
+# 🌍 Voyager
 
-> **Next-Generation Vacation Rentals** — An AI-enhanced, full-stack Airbnb clone leveraging **Retrieval-Augmented Generation (RAG)** and **Antigravity AI** for intelligent, context-aware property discovery.
+> **Next-Generation Vacation Rentals** — An AI-enhanced, full-stack vacation rental & stays platform leveraging **Retrieval-Augmented Generation (RAG)** and **Antigravity AI** for intelligent, context-aware property discovery.
 
 ---
 
 ## 🌟 Overview
 
-**Wanderlust** bridges the gap between traditional vacation rental platforms and modern AI capabilities. Designed for both hosts and travelers, it provides classic CRUD functionality alongside an intelligent AI assistant capable of personalized recommendations, semantic search, and interactive location discovery.
+**Voyager** bridges the gap between traditional vacation rental platforms and modern AI capabilities. Designed for both hosts and travelers, it provides classic CRUD functionality alongside an intelligent AI assistant capable of personalized recommendations, semantic search, and interactive location discovery.
 
 ---
 

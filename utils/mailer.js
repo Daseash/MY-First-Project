@@ -29,17 +29,17 @@ async function sendOtpNotification({ email, phone, otp }) {
   const transporter = getTransporter();
 
   const mailOptions = {
-    from: process.env.EMAIL_FROM || `"WanderLust Security" <${process.env.EMAIL_USER || "noreply@wanderlust.com"}>`,
+    from: process.env.EMAIL_FROM || `"Voyager Security" <${process.env.EMAIL_USER || "noreply@voyager.com"}>`,
     to: email,
-    subject: `Your WanderLust Verification Code: ${otp}`,
+    subject: `Your Voyager Verification Code: ${otp}`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 540px; margin: 0 auto; padding: 24px; border: 1px solid #eaeaea; border-radius: 12px; background: #ffffff;">
         <div style="text-align: center; margin-bottom: 24px;">
-          <h2 style="color: #ff385c; margin: 0; font-size: 26px;">WanderLust</h2>
+          <h2 style="color: #ff385c; margin: 0; font-size: 26px;">Voyager</h2>
           <p style="color: #666666; font-size: 14px; margin-top: 4px;">Sign in verification code</p>
         </div>
         <p style="font-size: 15px; color: #333333; line-height: 1.5;">Hello,</p>
-        <p style="font-size: 15px; color: #333333; line-height: 1.5;">You requested a one-time verification code to sign in to your WanderLust account.</p>
+        <p style="font-size: 15px; color: #333333; line-height: 1.5;">You requested a one-time verification code to sign in to your Voyager account.</p>
         
         <div style="text-align: center; margin: 28px 0; background: #fbf8f5; border: 2px dashed #ff385c; border-radius: 12px; padding: 18px;">
           <span style="font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #1a1a1a; font-family: monospace;">${otp}</span>
@@ -51,11 +51,11 @@ async function sendOtpNotification({ email, phone, otp }) {
         </p>
         <hr style="border: none; border-top: 1px solid #eeeeee; margin: 20px 0;" />
         <p style="font-size: 11px; color: #999999; text-align: center; margin: 0;">
-          &copy; ${new Date().getFullYear()} WanderLust Inc. All rights reserved.
+          &copy; ${new Date().getFullYear()} Voyager Inc. All rights reserved.
         </p>
       </div>
     `,
-    text: `Your WanderLust verification code is ${otp}. It is valid for 10 minutes.`,
+    text: `Your Voyager verification code is ${otp}. It is valid for 10 minutes.`,
   };
 
   try {
