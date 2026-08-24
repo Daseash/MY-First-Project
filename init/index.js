@@ -1,10 +1,13 @@
+require("dotenv").config();
 const mongoose = require("mongoose");
 const initData = require("./data.js");
 const Listing = require("../models/listing.js");
 
+const dbUrl = process.env.ATLASDB_URL || process.env.DB_URL || "mongodb://127.0.0.1:27017/wanderlust";
+
 async function main() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");
-  console.log("Connected to MongoDB");
+  await mongoose.connect(dbUrl);
+  console.log("Connected to MongoDB:", dbUrl.includes("mongodb+srv") ? "MongoDB Atlas (Cloud)" : "Local MongoDB");
 }
 
 const initDB = async () => {

@@ -165,7 +165,7 @@ app.use((err, req, res, next) => {
 
 // Server Launcher
 async function start({ port = process.env.PORT || 8080 } = {}) {
-  const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/wanderlust";
+  const dbUrl = process.env.ATLASDB_URL || process.env.DB_URL || "mongodb://127.0.0.1:27017/wanderlust";
   if (mongoose.connection.readyState === 0) {
     await mongoose.connect(dbUrl);
   }
