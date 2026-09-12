@@ -56,6 +56,14 @@
 - API keys for **Antigravity AI**, **Mapbox**, and **Cloudinary**
 
 ### Installation
+## 🚀 Quick Start
+
+### Prerequisites
+- [Node.js](https://nodejs.org/) (v18+ recommended)
+- [MongoDB](https://www.mongodb.com/) instance (local or MongoDB Atlas)
+- API keys for Antigravity AI, Mapbox, and Cloudinary
+
+### Installation & Running
 
 1. **Clone the repository:**
    ```bash
